@@ -1,6 +1,4 @@
-# Sinatra & React demo application
-
-This project was generated with [Yeoman](https://www.npmjs.com/package/generator-sinatra).
+# Lager
 
 ## Dependencies
 
@@ -17,11 +15,7 @@ bundle install
 
 ## Running 
 ```sh
-rackup
-
-# or
-
-rackup config.ru -o 0.0.0.0 # to listen globally
+ruby app.rb # => localhost:4000
 ```
 
 ## License
