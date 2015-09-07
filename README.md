@@ -2,6 +2,11 @@
 
 This project was generated with [Yeoman](https://www.npmjs.com/package/generator-sinatra).
 
+## Dependencies
+
+- Ruby
+- Node
+
 ## Building
 
 ```sh
