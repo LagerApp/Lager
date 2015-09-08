@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'thin'
 require 'em-websocket'
+require 'file-tail'
 
 EventMachine.run do
 
