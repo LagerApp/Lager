@@ -7,6 +7,13 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
     # path, query_string, origin, headers
     # Publish message to the client
     ws.send "Hello Client, you connected to #{handshake.path}"
+    Thread.new do
+      File::Tail::Logfile.open("/var/log/system.log") do |log|
+        log.tail do |line|
+          ws.send line
+        end
+      end
+    end
   end
 
   ws.onclose { puts "Connection closed" }
