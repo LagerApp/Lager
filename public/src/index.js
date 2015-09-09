@@ -15,7 +15,9 @@ var LagerApp = React.createClass({
           console.log("Socket Status: " + socket.readyState + " (closed)");
         }
         socket.onmessage = function(msg) {
-          React.findDOMNode(this.refs.line).innerHTML = msg.data;
+          var result = JSON.parse(msg.data);
+          React.findDOMNode(this.refs.line).innerHTML =
+            "Host: " + result['host'] + "; Message: " + result['msg'];
         }.bind(this)
       } catch(exception) {
         console.log("Error: " + exception);
