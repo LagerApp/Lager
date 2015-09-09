@@ -41,6 +41,20 @@ var LagerApp = React.createClass({
     return {
       logs: [],
       page: page,
+      services: [
+        {
+          name: "nginx",
+          server_count: 5
+        },
+        {
+          name: "postgresql",
+          server_count: 2
+        },
+        {
+          name: "rabbitmq",
+          server_count: 3
+        }
+      ],
       servers: [
         {
           host: "app1.sg",
@@ -64,17 +78,54 @@ var LagerApp = React.createClass({
   render: function() {
     var tableView;
     if (this.state.page === "servers") {
-      tableView = (<ServerTableView servers={this.state.servers} />)
+      tableView = <ServerTableView servers={this.state.servers} />
     } else {
-      tableView = (<div>hello</div>)
+      tableView = <ServiceTableView services={this.state.services} />
     }
     return (
-      <div ref="log" className="container">
+      <div>
         {tableView}
         <div ref="line"></div>
       </div>
     );
   }
+});
+
+var ServiceTableView = React.createClass({
+
+  _generateServiceTableViewCells: function() {
+    return this.props.services.map(function(service){
+      return (<ServiceTableViewCell service={service} key={service.name} />)
+    });
+  },
+
+  render: function() {
+    return (
+      <div>
+        <ul className="table-view">
+          {this._generateServiceTableViewCells()}
+        </ul>
+      </div>
+    );
+  }
+
+});
+
+var ServiceTableViewCell = React.createClass({
+
+  render: function() {
+    return (
+      <li className="table-view-cell">
+        <a className="navigate-right">
+          <div>
+            <h4>{this.props.service.name}</h4>
+            <p>Server count: {this.props.service.server_count}</p>
+          </div>
+        </a>
+      </li>
+    );
+  }
+
 });
 
 var ServerTableView = React.createClass({
