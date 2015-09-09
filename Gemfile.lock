@@ -25,9 +25,13 @@ GEM
 
 PLATFORMS
   ruby
+  x86-mingw32
 
 DEPENDENCIES
   em-websocket
   file-tail
   sinatra
   thin
+
+BUNDLED WITH
+   1.10.6
