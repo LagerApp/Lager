@@ -155,7 +155,7 @@ var ServerTableViewCell = React.createClass({
     var status = this.props.server.status ? "Up" : "Down";
     return (
       <li className="table-view-cell">
-        <a className="navigate-right">
+        <a className="navigate-right" href="/servers/new" data-transition="slide-in">
           <div style={{float: "left"}}>
             <h4>{this.props.server.host}</h4>
             <h5>{this.props.server.ip}</h5>

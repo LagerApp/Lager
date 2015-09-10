@@ -225,7 +225,7 @@
     // default way to get Push Container
     this.getDefaultContainer = function() {
       options.container || options.transition ? document.querySelector('.content') : document.body;
-    }
+    }.call(this);
 
     options.container = this.getDefaultContainer();
 
