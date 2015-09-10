@@ -3,10 +3,19 @@
     <form>
       <input type="search" placeholder="Search" />
     </form>
+    <%= @id %>
   </div>
 
   <script class="load-on-push">
-    console.log("logs")
+    var load = function() {
+      $.get("/logs/service.json?id=<%= @id %>", function(resp) {
+        console.log(resp.service.websocket_url);
+        $(".title").html(resp.service.name)
+      })
+    }
+    $(document).ready(function() {
+      load();
+    })
   </script>
 </div>
 
