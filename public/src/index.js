@@ -36,7 +36,7 @@ var LagerApp = React.createClass({
   getInitialState: function() {
     var page = "servers";
     if (window.location.hash) {
-      page = window.location.hash;
+      page = window.location.hash.substring(1);
     }
     return {
       logs: [],
