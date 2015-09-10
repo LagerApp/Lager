@@ -123,7 +123,7 @@ var ServiceTableViewCell = React.createClass({
   render: function() {
     return (
       <li className="table-view-cell">
-        <a className="navigate-right" data-transition="slide-in" href={"/logs/service?id=" + this.props.service.id}>
+        <a className="navigate-right" data-ignore="push" href={"/logs/service?id=" + this.props.service.id}>
           <div>
             <h4>{this.props.service.name}</h4>
             <p>Server count: {this.props.service.server_count}</p>

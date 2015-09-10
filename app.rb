@@ -6,6 +6,9 @@ require 'file-tail'
 EventMachine.run do
 
   class App < Sinatra::Base
+    configure do
+      enable :logging
+    end
     set :environment, :development
     set :public_folder, Proc.new { File.join(root, "public") }
     set :views, Proc.new { File.join(root, "templates") }

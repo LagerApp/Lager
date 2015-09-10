@@ -1,40 +1,7 @@
 <div class="content">
-  <div>
-    <form>
-      <input type="search" placeholder="Search" />
-    </form>
-  </div>
-
-  <script class="load-on-push">
-    var load = function() {
-      var socket;
-      var connect = function(host) {
-        try {
-          socket = new WebSocket(host);
-          console.log("Socket State: " + socket.readyState);
-          socket.onopen = function() {
-            console.log(host + ": " + "Socket Status: " + socket.readyState + " (open)");
-          }
-          socket.onclose = function() {
-            console.log("Socket Status: " + socket.readyState + " (closed)");
-          }
-          socket.onmessage = function(msg) {
-            var result = JSON.parse(msg.data);
-            console.log(result);
-          }.bind(this)
-        } catch(exception) {
-          console.log("Error: " + exception);
-        }
-      }
-
-      $.get("/logs/service.json?id=<%= @id %>", function(resp) {
-        service = resp.service
-        $(".title").html(service.name)
-        connect(service.websocket_url);
-      })
-    }
-
-    $(document).ready(function() { load(); })
-  </script>
+  <div id="content"></div>
 </div>
-
+<script type="text/javascript" charset="utf-8">
+  var service_id = <%= @id %>;
+</script>
+<script type="text/jsx" src="/src/log.js"></script>
