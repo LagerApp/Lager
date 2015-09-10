@@ -1,12 +1,10 @@
 var LagerApp = React.createClass({
 
-  componentWillMount: function() {
+  componentDidMount: function() {
     window.onhashchange = function() {
       this.setState({page: window.location.hash.substring(1)});
     }.bind(this);
-  },
 
-  componentDidMount: function() {
     var socket, host;
     host = "ws://localhost:4001";
 
@@ -116,7 +114,7 @@ var ServiceTableViewCell = React.createClass({
   render: function() {
     return (
       <li className="table-view-cell">
-        <a className="navigate-right">
+        <a className="navigate-right" data-transition="slide-in" href="/log">
           <div>
             <h4>{this.props.service.name}</h4>
             <p>Server count: {this.props.service.server_count}</p>

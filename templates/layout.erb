@@ -13,8 +13,7 @@
 
     <script src="/lib/JSXTransformer.js"></script>
     <script src="/lib/react.js"></script>
-    <script src="/lib/ratchet.min.js"></script>
-    <script src="/lib/push-react.js"></script>
+    <script src="/lib/ratchet.js"></script>
     <link rel="stylesheet" href="/lib/css/ratchet.min.css" />
     <link rel="stylesheet" href="/lib/css/ratchet-theme-ios.min.css" />
   </head>
@@ -27,11 +26,6 @@
       <a class="icon icon-plus pull-right" href="/servers/new" data-transition="slide-in"></a>
     </header>
 
-    <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
-    <div class="content">
-      <%= yield %>
-    </div>
-
     <nav class="bar bar-tab">
       <a class="tab-item active" href="/#servers" data-ignore="push">
         <span class="icon icon-home"></span>
@@ -42,5 +36,19 @@
         <span class="tab-label">Services</span>
       </a>
     </nav>
+
+    <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
+    <%= yield %>
+
+    <script type="text/javascript" charset="utf-8">
+      var checkPage = function(){
+        var scriptsList = document.querySelectorAll('script.load-on-push');
+        for(var i = 0; i < scriptsList.length; ++i) {
+            eval(scriptsList[i].innerHTML);
+        }
+      };
+
+      window.addEventListener('push', checkPage);
+    </script>
   </body>
 </html>
