@@ -1,5 +1,29 @@
-<form action="/new_server" method="post" style="padding: 10px;">
-  <input type="text" name="host" placeholder="IP Address/Hostname" />
-  <input type="text" name="ip_address" placeholder="Label" />
-  <button class="btn btn-positive btn-block" type="submit">Create new server</button>
-</form>
+<div class="content">
+  <form id="newServer" style="padding: 10px;">
+    <input type="text" name="host" placeholder="IP Address/Hostname" />
+    <input type="text" name="label" placeholder="Label" />
+    <button class="btn btn-positive btn-block" type="submit">Create new server</button>
+  </form>
+  <script class="load-on-push" type="text/javascript" charset="utf-8">
+
+    $('header a.pull-right').remove();
+
+    $('#newServer').on('submit', function() {
+      var host = $('input[name="host"]').val();
+      var label = $('input[name="label"]').val();
+
+      var data = {
+        host: host,
+        label: label
+      };
+
+      // Ajax call to POST the new server here
+      $.ajax({
+
+      });
+    });
+
+  </script>
+</div>
+
+
