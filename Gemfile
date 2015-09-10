@@ -1,7 +1,10 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 gem 'thin'
 gem 'sinatra'
 gem 'em-websocket'
 gem 'file-tail'
 gem 'net-ssh'
+gem 'sinatra-activerecord'
+gem 'sqlite3'
+gem 'rake'
