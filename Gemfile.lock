@@ -17,6 +17,7 @@ GEM
     arel (6.0.3)
     builder (3.2.2)
     daemons (1.2.3)
+    dotenv (2.0.2)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -56,6 +57,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  dotenv
   em-websocket
   file-tail
   net-ssh

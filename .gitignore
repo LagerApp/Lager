@@ -39,3 +39,4 @@ log/
 
 config/*.yml
 *.sqlite3
+.env

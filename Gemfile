@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'dotenv'
+
 gem 'thin'
 gem 'sinatra'
 gem 'em-websocket'

@@ -1,3 +1,6 @@
+require 'dotenv'
+Dotenv.load
+
 require 'sinatra/base'
 require 'sinatra/activerecord'
 
@@ -10,7 +13,7 @@ require './models/server'
 require './models/service'
 
 class App < Sinatra::Base
-  set :environment, :development
+  set :environment, ENV['RACK_ENV']
   set :public_folder, Proc.new { File.join(root, "public") }
   set :views, Proc.new { File.join(root, "templates") }
   register Sinatra::ActiveRecordExtension
