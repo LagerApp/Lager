@@ -11,6 +11,7 @@
 bower install 
 npm install
 bundle install
+RAKE_ENV=development bundle exec rake db:setup
 ```
 
 ## Running 
