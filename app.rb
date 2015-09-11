@@ -13,6 +13,9 @@ require './models/server'
 require './models/service'
 
 class App < Sinatra::Base
+  configure do
+    enable :logging
+  end
   set :environment, ENV['RACK_ENV']
   set :public_folder, Proc.new { File.join(root, "public") }
   set :views, Proc.new { File.join(root, "templates") }

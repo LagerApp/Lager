@@ -10,7 +10,6 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
     # Access properties on the EM::WebSocket::Handshake object, e.g.
     # path, query_string, origin, headers
     # Publish message to the client
-
     Thread.new do
       stream_log('rahij.com', '/var/log/openvpnas.log') do |ch, success|
         raise "could not stream logs" unless success

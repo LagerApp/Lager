@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Lager</title>
+
+    <!-- Sets initial viewport load and disables zooming  -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <script src="/lib/JSXTransformer.js"></script>
+    <script src="/lib/react.js"></script>
+    <script src="/lib/ratchet.js"></script>
+    <script src="/lib/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="/lib/css/ratchet.min.css" />
+    <link rel="stylesheet" href="/lib/css/ratchet-theme-ios.min.css" />
+  </head>
+  <body>
+
+    <!-- Make sure all your bars are the first things in your <body> -->
+    <header class="bar bar-nav">
+      <h1 class="title">Lager</h1>
+      <a class="icon icon-bars pull-left"></a>
+      <a class="icon icon-plus pull-right" href="/servers/new" data-transition="slide-in"></a>
+    </header>
+
+    <nav class="bar bar-tab">
+      <a class="tab-item active" href="/#servers" data-ignore="push">
+        <span class="icon icon-home"></span>
+        <span class="tab-label">Servers</span>
+      </a>
+      <a class="tab-item" href="/#services" data-ignore="push">
+        <span class="icon icon-pages"></span>
+        <span class="tab-label">Services</span>
+      </a>
+    </nav>
+
+    <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
+    <%= yield %>
+
+    <script type="text/javascript" charset="utf-8">
+      var checkPage = function(){
+        var scriptsList = document.querySelectorAll('script.load-on-push');
+        for(var i = 0; i < scriptsList.length; ++i) {
+            eval(scriptsList[i].innerHTML);
+        }
+      };
+
+      window.addEventListener('push', checkPage);
+    </script>
+  </body>
+</html>
