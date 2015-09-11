@@ -36,3 +36,7 @@ Thumbs.db
 .tmp
 vendor/bundle
 log/
+
+config/*.yml
+*.sqlite3
+.env
