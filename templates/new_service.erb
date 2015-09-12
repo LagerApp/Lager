@@ -1,0 +1,95 @@
+<div class="content">
+  <div style="padding: 10px;" id="serverSelector">
+    <button class="btn btn-positive btn-block next-step">Next step</button>
+  </div>
+
+  <form id="serviceSelector" style="padding: 10px; display: none;">
+    <select>
+      <option>- Select a service -</option>
+    </select>
+    <input type="text" name="default_log" class="service-default-path" />
+  </form>
+
+  <script class="load-on-push" type="text/javascript">
+
+$('header .title').text('Add a new service');
+
+// Dummy data to be replaced by Ajax call
+var serverData = [
+  {
+    host: "app1.sg",
+    ip: "1.1.1.1",
+    status: true
+  },
+  {
+    host: "app2.sg",
+    ip: "2.2.2.2",
+    status: false
+  },
+  {
+    host: "db.sg",
+    ip: "3.3.3.3",
+    status: true
+  }
+];
+
+// Dummy data to be replaced by Ajax call
+var serviceData = [
+  {
+    name: 'nginx',
+    default_log: '/var/log/nginx'
+  },
+  {
+    name: 'apache2',
+    default_log: '/var/log/apache2'
+  },
+  {
+    name: 'mysql',
+    default_log: '/var/log/mysql'
+  },
+  {
+    name: 'postgresql',
+    default_log: '/var/log/pg'
+  },
+  {
+    name: 'bili',
+    default_log: '/var/log/bili'
+  }
+];
+
+// Populate the server selectors
+serverData.forEach(function(server) {
+  $('#serverSelector .next-step').before('<button class="btn btn-block btn-outlined">' + server.host + '</button>');
+});
+
+// Turns button into active on touch
+$('button.btn-outlined').on('click', function() {
+  $(this).toggleClass('active');
+});
+
+// Populate the service selector
+serviceData.forEach(function(service) {
+  var newEl = $('<option class="btn btn-positive btn-block btn-outlined">' + service.name + '</option>');
+  $('#serviceSelector select').append(newEl);
+});
+
+// Populate the service log path
+$('#serviceSelector select').on('change', function() {
+  var selectedService = $('#serviceSelector select').val();
+  var selectedServiceLogPath = serviceData.filter(function(service) {
+    return service.name === selectedService;
+  });
+  $('.service-default-path').val(selectedServiceLogPath[0].default_log);
+});
+
+// Shifts form to the next step
+$('.next-step').on('click', function() {
+  $('#serverSelector').fadeOut(500, function() {
+    $('#serviceSelector').fadeIn(500);
+  });
+});
+
+  </script>
+
+</div>
+

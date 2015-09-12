@@ -33,6 +33,9 @@ class App
     erb :new_server
   end
 
+  get '/services/new' do
+    erb :new_service
+  end
   get '/logs/service' do
     @id = params[:id]
     erb :log
