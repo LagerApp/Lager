@@ -25,6 +25,20 @@ class App
     }
   ]
 
+  get '/logs/server/:id' do
+    id = params[:id]
+    @server = Server.find(id);
+    content_type :json
+    @server.to_json
+  end
+
+  get '/logs/service/:id' do
+    id = params[:id]
+    @service = Service.find(id);
+    content_type :json
+    @service.to_json
+  end
+
   get '/' do
     erb :index
   end
