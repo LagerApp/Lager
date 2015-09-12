@@ -2,6 +2,8 @@ require 'json'
 
 require_relative 'log_helper'
 
+@log_paths = YAML.load_file('log_paths.yml')
+
 EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
   puts ">> Websocket server started"
 
@@ -10,23 +12,33 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
     # Access properties on the EM::WebSocket::Handshake object, e.g.
     # path, query_string, origin, headers
     # Publish message to the client
-    Thread.new do
-      stream_log('rahij.com', '/var/log/openvpnas.log') do |ch, success|
-        raise "could not stream logs" unless success
-
-        # "on_data" is called when the process writes something to stdout
-        ch.on_data do |c, data|
-          ws.send({ host: 'rahij.com', msg: data }.to_json)
-        end
-        ch.on_close { puts "done!" }
-      end
-    end
   end
 
   ws.onclose { puts "Connection closed" }
 
   ws.onmessage do |msg|
     puts "Recieved message: #{msg}"
-    ws.send "Pong: #{msg}"
+    data = JSON.parse(msg)
+    case data["type"]
+    when "service"
+      service = Service.includes(:servers).find(data["id"])
+      service.servers.each do |server|
+        Thread.new do
+          stream_log(server[:ip], @log_paths[service[:service_type]]) do |ch, success|
+            raise "could not stream logs" unless success
+
+            # "on_data" is called when the process writes something to stdout
+            ch.on_data do |c, data|
+              ws.send({ host: server[:host], msg: data }.to_json)
+            end
+            ch.on_close { puts "done!" }
+          end
+        end
+      end
+    when "server"
+      raise 'unsupported operation' # to implement
+    else
+      raise 'unsupported operation'
+    end
   end
 end

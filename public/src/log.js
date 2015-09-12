@@ -1,11 +1,10 @@
 var LogApp = React.createClass({
 
   componentDidMount: function() {
-    $.get("/logs/service.json?id=" + this.props.service_id, function(resp) {
-      console.log(resp);
-      service = resp.service
-      $(".title").html(service.name)
-      this._connectWebsocket(service.websocket_url);
+    $.get("/service/" + this.props.service_id, function(service) {
+      $(".title").html(service.name);
+      this.setState({ service: service });
+      this._connectWebsocket("ws://localhost:4001", service);
     }.bind(this))
   },
 
@@ -21,14 +20,15 @@ var LogApp = React.createClass({
     }, 'slow');
   },
 
-  _connectWebsocket: function(host) {
+  _connectWebsocket: function(host, service) {
     var socket;
-    var connect = function(host) {
+    var connect = function(host, service) {
       try {
         socket = new WebSocket(host);
         console.log("Socket State: " + socket.readyState);
         socket.onopen = function() {
           console.log(host + ": " + "Socket Status: " + socket.readyState + " (open)");
+          socket.send(JSON.stringify({ type: "service", id: service.id }));
         }
         socket.onclose = function() {
           console.log("Socket Status: " + socket.readyState + " (closed)");
@@ -44,7 +44,7 @@ var LogApp = React.createClass({
       }
     }.bind(this)
 
-    connect(host);
+    connect(host, service);
   },
 
   _createLogListItem: function(log) {
