@@ -1,5 +1,7 @@
 require 'json'
 
+require_relative 'log_helper'
+
 EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
   puts ">> Websocket server started"
 
@@ -9,10 +11,14 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
     # path, query_string, origin, headers
     # Publish message to the client
     Thread.new do
-      File::Tail::Logfile.open("/var/log/system.log") do |log|
-        log.tail do |line|
-          ws.send({ host: 'host1', msg: line }.to_json)
+      stream_log('rahij.com', '/var/log/openvpnas.log') do |ch, success|
+        raise "could not stream logs" unless success
+
+        # "on_data" is called when the process writes something to stdout
+        ch.on_data do |c, data|
+          ws.send({ host: 'rahij.com', msg: data }.to_json)
         end
+        ch.on_close { puts "done!" }
       end
     end
   end

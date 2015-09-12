@@ -1,12 +1,7 @@
 <div class="content">
-  <div>
-    <form>
-      <input type="search" placeholder="Search" />
-    </form>
-  </div>
-
-  <script class="load-on-push">
-    console.log("logs")
-  </script>
+  <div id="content"></div>
 </div>
-
+<script type="text/javascript" charset="utf-8">
+  var service_id = <%= @id %>;
+</script>
+<script type="text/jsx" src="/src/log.js"></script>
