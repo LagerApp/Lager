@@ -2,22 +2,22 @@ var LagerApp = React.createClass({
 
   loadServersData: function() {
     $.ajax({
-      url: "/logs/server/all",
+      url: "/servers",
       dataType: 'json',
       cache: false,
       success: function(data) {
-        this.setState({servers: data});
+        this.setState({ servers: data });
       }.bind(this)
     });
   },
 
   loadServicesData: function() {
     $.ajax({
-      url: "/logs/service/all",
+      url: "/services",
       dataType: 'json',
       cache: false,
       success: function(data) {
-        this.setState({services: data});
+        this.setState({ services: data });
       }.bind(this)
     });
   },
@@ -47,40 +47,8 @@ var LagerApp = React.createClass({
     return {
       logs: [],
       page: page,
-      services: [
-        {
-          id: "1",
-          name: "nginx",
-          server_count: 5
-        },
-        {
-          id: "2",
-          name: "postgresql",
-          server_count: 2
-        },
-        {
-          id: "3",
-          name: "rabbitmq",
-          server_count: 3
-        }
-      ],
-      servers: [
-        {
-          host: "app1.sg",
-          ip: "1.1.1.1",
-          status: true
-        },
-        {
-          host: "app2.sg",
-          ip: "2.2.2.2",
-          status: false
-        },
-        {
-          host: "db.sg",
-          ip: "3.3.3.3",
-          status: true
-        },
-      ]
+      services: [],
+      servers: []
     };
   },
 
@@ -125,10 +93,10 @@ var ServiceTableViewCell = React.createClass({
   render: function() {
     return (
       <li className="table-view-cell">
-        <a className="navigate-right" data-ignore="push" href={"/logs/service?id=" + this.props.service.id}>
+        <a className="navigate-right" data-ignore="push" href={"/logs/service/" + this.props.service.id}>
           <div>
             <h4>{this.props.service.name}</h4>
-            <p>Server count: {this.props.service.server_count}</p>
+             <p>Server count: {this.props.service.servers.length}</p>
           </div>
         </a>
       </li>
