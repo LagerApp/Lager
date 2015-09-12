@@ -25,6 +25,18 @@ class App
     }
   ]
 
+  get '/logs/server/all' do
+    @servers = Server.all;
+    content_type :json
+    @servers.to_json
+  end
+
+  get '/logs/service/all' do
+    @services = Service.all;
+    content_type :json
+    @services.to_json
+  end
+
   get '/logs/server/:id' do
     id = params[:id]
     @server = Server.find(id);

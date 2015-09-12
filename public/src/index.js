@@ -1,5 +1,27 @@
 var LagerApp = React.createClass({
 
+  loadServersData: function() {
+    $.ajax({
+      url: "/logs/server/all",
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        this.setState({servers: data});
+      }.bind(this)
+    });
+  },
+
+  loadServicesData: function() {
+    $.ajax({
+      url: "/logs/service/all",
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        this.setState({services: data});
+      }.bind(this)
+    });
+  },
+
   componentWillMount: function() {
     window.onhashchange = function() {
       this.setState({page: window.location.hash.substring(1)});
@@ -7,6 +29,8 @@ var LagerApp = React.createClass({
   },
 
   componentDidMount: function() {
+    this.loadServicesData();
+    this.loadServersData();
     window.onhashchange = function() {
       var hash = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + hash + '/new');

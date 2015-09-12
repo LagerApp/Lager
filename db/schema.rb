@@ -11,11 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150910184514) do
+ActiveRecord::Schema.define(version: 20150912235033) do
 
   create_table "servers", force: :cascade do |t|
-    t.string "ip"
-    t.string "name"
+    t.string  "ip"
+    t.string  "host"
+    t.boolean "status"
   end
 
   create_table "servers_services", id: false, force: :cascade do |t|
@@ -27,8 +28,9 @@ ActiveRecord::Schema.define(version: 20150910184514) do
   add_index "servers_services", ["service_id"], name: "index_servers_services_on_service_id"
 
   create_table "services", force: :cascade do |t|
-    t.string "name"
-    t.string "service_type"
+    t.string  "name"
+    t.string  "service_type"
+    t.integer "server_count"
   end
 
 end
