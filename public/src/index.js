@@ -39,7 +39,7 @@ var LagerApp = React.createClass({
   },
 
   getInitialState: function() {
-    var page = "servers";
+    var page = "services";
     if (window.location.hash) {
       page = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + page + '/new');
@@ -136,7 +136,7 @@ var ServerTableViewCell = React.createClass({
     var status = this.props.server.status ? "Up" : "Down";
     return (
       <li className="table-view-cell">
-        <a className="navigate-right" href="/servers/new" data-transition="slide-in">
+        <a className="navigate-right" href="#" data-transition="slide-in">
           <div style={{float: "left"}}>
             <h4>{this.props.server.host}</h4>
             <h5>{this.props.server.label}</h5>
