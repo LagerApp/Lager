@@ -4,7 +4,7 @@ var LogApp = React.createClass({
     $.get("/service/" + this.props.service_id, function(service) {
       $(".title").html(service.name);
       this.setState({ service: service });
-      this._connectWebsocket("ws://localhost:4001", service);
+      this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);
     }.bind(this))
   },
 
