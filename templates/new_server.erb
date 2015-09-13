@@ -19,7 +19,16 @@
 
       // Ajax call to POST the new server here
       $.ajax({
-
+        method: "POST",
+        url: "/servers",
+        data: {
+          server: {
+            name: label,
+            ip: host
+          }
+        }
+      }).done(function(resp) {
+        console.log(resp);
       });
     });
 
