@@ -135,7 +135,7 @@ var ServerTableViewCell = React.createClass({
         <a className="navigate-right" href="/servers/new" data-transition="slide-in">
           <div style={{float: "left"}}>
             <h4>{this.props.server.host}</h4>
-            <h5>{this.props.server.ip}</h5>
+            <h5>{this.props.server.label}</h5>
           </div>
           <button className={statusClass} style={{float: "right"}}>
             {status}

@@ -11,10 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150912235033) do
+ActiveRecord::Schema.define(version: 20150913135137) do
 
   create_table "servers", force: :cascade do |t|
-    t.string  "ip"
+    t.string  "label"
     t.string  "host"
     t.boolean "status"
   end
