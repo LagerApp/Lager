@@ -21,3 +21,13 @@ def stream_log(host, logPath, &block)
     end
   end
 end
+
+def fake_stream_log(filepath, ws)
+  Thread.new do
+    File.readlines(filepath).each do |line|
+      sleep(1.0)
+      p line
+      ws.send({ host: "example.org", msg: line}.to_json)
+    end
+  end
+end
