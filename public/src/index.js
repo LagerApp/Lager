@@ -55,8 +55,12 @@ var LagerApp = React.createClass({
   render: function() {
     var tableView;
     if (this.state.page === "servers") {
+      $("#servers-tab-item").addClass("active");
+      $("#services-tab-item").removeClass("active");
       tableView = <ServerTableView servers={this.state.servers} />
     } else {
+      $("#servers-tab-item").removeClass("active");
+      $("#services-tab-item").addClass("active");
       tableView = <ServiceTableView services={this.state.services} />
     }
     return (
