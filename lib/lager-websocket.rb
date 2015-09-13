@@ -19,6 +19,13 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
   ws.onmessage do |msg|
     puts "Recieved message: #{msg}"
     data = JSON.parse(msg)
+    ###
+    #
+    # DEMO
+    #
+    ###
+    fake_stream_log("/opt/lager/fake.log", ws)
+
     case data["type"]
     when "service"
       service = Service.includes(:servers).find(data["id"])
