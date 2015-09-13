@@ -36,7 +36,7 @@ var LogApp = React.createClass({
         socket.onmessage = function(msg) {
           var result = JSON.parse(msg.data);
           var logList = this.state.logList;
-          logList.push(this._createLogListItem(result));
+          logList.unshift(this._createLogListItem(result));
           this.setState({logList: logList});
         }.bind(this)
       } catch(exception) {
