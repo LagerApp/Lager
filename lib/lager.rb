@@ -16,6 +16,14 @@ class App
     p server
   end
 
+  post '/servers' do
+    server_params = params["server"]
+    halt(401, "Not authorized") unless server_params
+    server = Server.new(host: server_params["name"], ip: server_params["ip"])
+    p server
+    erb :index
+  end
+
   get '/logs/server/:id' do
     id = params[:id]
     @server = Server.find(id);
