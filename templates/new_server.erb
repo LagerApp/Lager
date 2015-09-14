@@ -8,7 +8,8 @@
 
     $('header a.pull-right').remove();
 
-    $('#newServer').on('submit', function() {
+    $('#newServer').on('submit', function(e) {
+      e.preventDefault();
       var host = $('input[name="host"]').val();
       var label = $('input[name="label"]').val();
 
@@ -28,7 +29,7 @@
           }
         }
       }).done(function(resp) {
-        console.log(resp);
+        window.location.href = '/';
       });
     });
 
