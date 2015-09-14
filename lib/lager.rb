@@ -24,7 +24,7 @@ class App
   post '/servers' do
     server_params = params["server"]
     halt(401, "Not authorized") unless server_params
-    server = Server.new(host: server_params["name"], ip: server_params["ip"])
+    server = Server.create(host: server_params["host"], label: server_params["label"])
     p server
     erb :index
   end
