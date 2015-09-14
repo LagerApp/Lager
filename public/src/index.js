@@ -2,7 +2,7 @@ var LagerApp = React.createClass({
 
   loadServersData: function() {
     $.ajax({
-      url: "/servers",
+      url: "/logs/server/all",
       dataType: 'json',
       cache: false,
       success: function(data) {
@@ -13,7 +13,7 @@ var LagerApp = React.createClass({
 
   loadServicesData: function() {
     $.ajax({
-      url: "/services",
+      url: "/logs/service/all",
       dataType: 'json',
       cache: false,
       success: function(data) {
