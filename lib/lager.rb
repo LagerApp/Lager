@@ -9,24 +9,11 @@ class App
     @servers.to_json
   end
 
-  get '/logs/server/all' do
-    @servers = Server.all;
-    content_type :json
-    @servers.to_json
-  end
-
-  get '/logs/service/all' do
-    @services = Service.all;
-    content_type :json
-    @services.to_json
-  end
-
   post '/servers' do
     server_params = params["server"]
     halt(401, "Not authorized") unless server_params
     server = Server.create(host: server_params["host"], label: server_params["label"])
     p server
-    erb :index
   end
 
   get '/logs/server/:id' do
