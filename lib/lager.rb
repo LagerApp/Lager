@@ -9,8 +9,15 @@ class App
     @servers.to_json
   end
 
-  get '/server/:id' do
-    @server = Server.find(params[:id]);
+  post '/servers' do
+    server_params = params["server"]
+    halt(401, "Not authorized") unless server_params
+    server = Server.create(host: server_params["host"], label: server_params["label"])
+  end
+
+  get '/logs/server/:id' do
+    id = params[:id]
+    @server = Server.find(id);
     content_type :json
     @server.to_json
   end

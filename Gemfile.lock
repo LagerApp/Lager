@@ -66,6 +66,3 @@ DEPENDENCIES
   sinatra-activerecord
   sqlite3
   thin
-
-BUNDLED WITH
-   1.10.6
