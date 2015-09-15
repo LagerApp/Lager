@@ -108,8 +108,8 @@ var ServiceTableViewCell = React.createClass({
 var ServerTableView = React.createClass({
 
   _generateServerTableViewCells: function() {
-    return this.props.servers.map(function(server){
-      return (<ServerTableViewCell server={server} key={server.ip} />)
+    return this.props.servers.map(function(server, idx){
+      return (<ServerTableViewCell server={server} key={idx} />)
     });
   },
 
