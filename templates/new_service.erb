@@ -7,7 +7,7 @@
     <select>
       <option>- Select a service -</option>
     </select>
-    <input type="text" name="default_log" class="service-default-path" />
+    <input type="text" name="default_log" class="service-default-path" placeholder="Path to logs" />
   </form>
 
   <script class="load-on-push" type="text/javascript">
@@ -57,14 +57,27 @@ var serviceData = [
   }
 ];
 
+// Stores the form data
+var formData = {
+  servers: []
+};
+
 // Populate the server selectors
 serverData.forEach(function(server) {
   $('#serverSelector .next-step').before('<button class="btn btn-block btn-outlined">' + server.host + '</button>');
 });
 
-// Turns button into active on touch
+// Turns button into active on touch and stores server selection into form data
 $('button.btn-outlined').on('click', function() {
+  var selectedServer = $(this).text();
   $(this).toggleClass('active');
+
+  var i = formData.servers.indexOf(selectedServer);
+  if (i === -1) {
+    formData.servers.push(selectedServer);
+  } else {
+    formData.servers.splice(i, 1);
+  }
 });
 
 // Populate the service selector
