@@ -32,6 +32,16 @@ class App
     @services.to_json(:include => :servers)
   end
 
+  post '/services' do
+   services_params = params["services"]
+   halt(401, "Not authorized") unless services_params
+   services_params["servers"].each do |server_name|
+      server = Server.find_by(label: server_name)
+      service = Service.create(name: services_params["name"], service_type: 'db', log_path: services_params["log_path"])
+      server.services << service
+   end
+  end
+
   get '/service/:id' do
     @service = Service.find(params[:id]);
     content_type :json

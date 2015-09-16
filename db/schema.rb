@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150913135137) do
+ActiveRecord::Schema.define(version: 20150916162754) do
 
   create_table "servers", force: :cascade do |t|
     t.string  "label"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20150913135137) do
     t.string  "name"
     t.string  "service_type"
     t.integer "server_count"
+    t.text    "log_path"
   end
 
 end

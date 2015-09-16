@@ -8,6 +8,7 @@
       <option>- Select a service -</option>
     </select>
     <input type="text" name="default_log" class="service-default-path" placeholder="Path to logs" />
+    <button class="btn btn-positive btn-block" type="submit">Create new service</button>
   </form>
 
   <script class="load-on-push" type="text/javascript">
@@ -54,12 +55,20 @@ var serviceData = [
   {
     name: 'bili',
     default_log: '/var/log/bili'
+  },
+  {
+    name: 'Others',
+    default_log: ''
   }
 ];
 
 // Stores the form data
 var formData = {
-  servers: []
+  services: {
+    servers: [],
+    name: '',
+    log_path: ''
+  }
 };
 
 // Populate the server selectors
@@ -72,11 +81,11 @@ $('button.btn-outlined').on('click', function() {
   var selectedServer = $(this).text();
   $(this).toggleClass('active');
 
-  var i = formData.servers.indexOf(selectedServer);
+  var i = formData.services.servers.indexOf(selectedServer);
   if (i === -1) {
-    formData.servers.push(selectedServer);
+    formData.services.servers.push(selectedServer);
   } else {
-    formData.servers.splice(i, 1);
+    formData.services.servers.splice(i, 1);
   }
 });
 
@@ -99,6 +108,23 @@ $('#serviceSelector select').on('change', function() {
 $('.next-step').on('click', function() {
   $('#serverSelector').fadeOut(500, function() {
     $('#serviceSelector').fadeIn(500);
+  });
+});
+
+// Submits the form
+$('#serviceSelector').on('submit', function(e) {
+  e.preventDefault();
+
+  formData.services.name = $('#serviceSelector select').val();
+  formData.services.log_path = $('.service-default-path').val();
+
+  // Ajax call to POST the new service here
+  $.ajax({
+    method: 'POST',
+    url: '/services',
+    data: formData
+  }).done(function(resp) {
+    window.location.href = '/#services';
   });
 });
 
