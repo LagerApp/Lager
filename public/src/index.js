@@ -22,7 +22,7 @@ var LagerApp = React.createClass({
     });
   },
 
-  componentWillMount: function() {
+  componentDidMount: function() {
     window.onhashchange = function() {
       this.setState({page: window.location.hash.substring(1)});
     }.bind(this);
@@ -39,7 +39,7 @@ var LagerApp = React.createClass({
   },
 
   getInitialState: function() {
-    var page = "servers";
+    var page = "services";
     if (window.location.hash) {
       page = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + page + '/new');
@@ -55,8 +55,12 @@ var LagerApp = React.createClass({
   render: function() {
     var tableView;
     if (this.state.page === "servers") {
+      $("#servers-tab-item").addClass("active");
+      $("#services-tab-item").removeClass("active");
       tableView = <ServerTableView servers={this.state.servers} />
     } else {
+      $("#servers-tab-item").removeClass("active");
+      $("#services-tab-item").addClass("active");
       tableView = <ServiceTableView services={this.state.services} />
     }
     return (
@@ -132,7 +136,7 @@ var ServerTableViewCell = React.createClass({
     var status = this.props.server.status ? "Up" : "Down";
     return (
       <li className="table-view-cell">
-        <a className="navigate-right" href="/servers/new" data-transition="slide-in">
+        <a className="navigate-right" href="#" data-transition="slide-in">
           <div style={{float: "left"}}>
             <h4>{this.props.server.host}</h4>
             <h5>{this.props.server.label}</h5>

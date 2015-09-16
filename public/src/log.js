@@ -4,7 +4,7 @@ var LogApp = React.createClass({
     $.get("/service/" + this.props.service_id, function(service) {
       $(".title").html(service.name);
       this.setState({ service: service });
-      this._connectWebsocket("ws://localhost:4001", service);
+      this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);
     }.bind(this))
   },
 
@@ -36,7 +36,7 @@ var LogApp = React.createClass({
         socket.onmessage = function(msg) {
           var result = JSON.parse(msg.data);
           var logList = this.state.logList;
-          logList.push(this._createLogListItem(result));
+          logList.unshift(this._createLogListItem(result));
           this.setState({logList: logList});
         }.bind(this)
       } catch(exception) {
