@@ -1,3 +1,6 @@
+require 'net/http'
+require 'uri'
+
 class App
   get '/' do
     erb :index
@@ -45,5 +48,19 @@ class App
   get '/logs/service/:id' do
     @id = params[:id]
     erb :log
+  end
+
+  get '/server/:id/status' do
+    begin
+      @server = Server.find(params[:id])
+      response = Net::HTTP.get_response(URI.parse(@server["host"]))
+      currentStatus = response.code
+      content_type :json
+      currentStatus.to_json
+    rescue Errno::ECONNREFUSED
+      currentStatus = "500"
+      content_type :json
+      currentStatus.to_json
+    end
   end
 end
