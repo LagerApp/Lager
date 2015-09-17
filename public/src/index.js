@@ -231,7 +231,7 @@ var LogReaderSettingView = React.createClass({
   render: function() {
     var options = [];
     for (var i=10; i <= 100; i+=10) {
-      options.push(<LogReaderLineOptions lines={i} key={i} />);
+      options.push(<LogReaderLineOption lines={i} key={i} />);
     }
 
     return (
@@ -243,7 +243,7 @@ var LogReaderSettingView = React.createClass({
 
 });
 
-var LogReaderLineOptions = React.createClass({
+var LogReaderLineOption = React.createClass({
 
   render: function() {
     return (
