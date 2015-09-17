@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 20150916162754) do
     t.string  "name"
     t.string  "service_type"
     t.integer "server_count"
-    t.text    "log_path"
   end
 
 end

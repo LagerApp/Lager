@@ -7,7 +7,6 @@
     <select>
       <option>- Select a service -</option>
     </select>
-    <input type="text" name="default_log" class="service-default-path" placeholder="Path to logs" />
     <button class="btn btn-positive btn-block" type="submit">Create new service</button>
   </form>
 
@@ -66,8 +65,7 @@ var serviceData = [
 var formData = {
   services: {
     servers: [],
-    name: '',
-    log_path: ''
+    name: ''
   }
 };
 
@@ -116,7 +114,6 @@ $('#serviceSelector').on('submit', function(e) {
   e.preventDefault();
 
   formData.services.name = $('#serviceSelector select').val();
-  formData.services.log_path = $('.service-default-path').val();
 
   // Ajax call to POST the new service here
   $.ajax({
