@@ -24,12 +24,13 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
       service = Service.includes(:servers).find(data["id"])
       service.servers.each do |server|
         Thread.new do
-          stream_log(server[:ip], @log_paths[service[:service_type]]) do |ch, success|
+          stream_log(server[:host], @log_paths[service[:service_type]]) do |ch, success|
             raise "could not stream logs" unless success
 
             # "on_data" is called when the process writes something to stdout
             ch.on_data do |c, data|
-              ws.send({ host: server[:host], msg: data }.to_json)
+              time = Time.now
+              ws.send({ host: server[:host], msg: data, time: time }.to_json)              
             end
             ch.on_close { puts "done!" }
           end
