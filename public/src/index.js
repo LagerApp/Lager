@@ -49,7 +49,7 @@ var LagerApp = React.createClass({
       page: page,
       services: [],
       servers: [],
-      loggedIn: false
+      loggedIn: localStorage.getItem('loggedIn')
     };
   },
 
@@ -207,6 +207,14 @@ var SettingsSelectorView = React.createClass({
 var LoginView = React.createClass({
 
   render: function() {
+    if (this.props.loggedIn) {
+      return (
+        <div className="content-padded">
+          <p>You're already logged in!</p>
+          <button className="btn btn-negative btn-block">Logout</button>
+        </div>
+      );
+    }
     return (
       <form style={{padding: "10px"}}>
         <input type="text" placeholder="Username" />
