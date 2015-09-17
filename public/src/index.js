@@ -55,13 +55,26 @@ var LagerApp = React.createClass({
   render: function() {
     var tableView;
     if (this.state.page === "servers") {
+      $('#settings-tab-item').removeClass('active');
       $("#servers-tab-item").addClass("active");
       $("#services-tab-item").removeClass("active");
+      $('header a.pull-right').show();
+
       tableView = <ServerTableView servers={this.state.servers} />
-    } else {
+    } else if (this.state.page === 'services') {
+      $('#settings-tab-item').removeClass('active');
       $("#servers-tab-item").removeClass("active");
       $("#services-tab-item").addClass("active");
+      $('header a.pull-right').show();
+
       tableView = <ServiceTableView services={this.state.services} />
+    } else {
+      $('#settings-tab-item').addClass('active');
+      $("#servers-tab-item").removeClass("active");
+      $("#services-tab-item").removeClass("active");
+      $('header a.pull-right').hide();
+
+      tableView = <SettingsView />;
     }
     return (
       <div>
@@ -146,6 +159,40 @@ var ServerTableViewCell = React.createClass({
           </button>
         </a>
       </li>
+    );
+  }
+
+});
+
+var SettingsView = React.createClass({
+
+  render: function() {
+    return (
+      <div>
+        <SettingsSelectorView />
+        <div className="card">
+          <span id="item1mobile" className="control-content active" style={{padding: "10px"}}>Item 1</span>
+          <span id="item2mobile" className="control-content" style={{padding: "10px"}}>Item 2</span>
+          <span id="item3mobile" className="control-content" style={{padding: "10px"}}>Item 3</span>
+        </div>
+      </div>
+    );
+  }
+
+});
+
+var SettingsSelectorView = React.createClass({
+
+  render: function() {
+    return (
+      <div className="segmented-control" style={{margin: "10px"}}>
+        <a className="control-item active" href="#item1mobile">
+          Account
+        </a>
+        <a className="control-item" href="#item2mobile">
+          Log Viewer
+        </a>
+      </div>
     );
   }
 
