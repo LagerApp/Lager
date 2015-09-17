@@ -48,7 +48,8 @@ var LagerApp = React.createClass({
       logs: [],
       page: page,
       services: [],
-      servers: []
+      servers: [],
+      loggedIn: false
     };
   },
 
@@ -74,7 +75,7 @@ var LagerApp = React.createClass({
       $("#services-tab-item").removeClass("active");
       $('header a.pull-right').hide();
 
-      tableView = <SettingsView />;
+      tableView = <SettingsView loggedIn={this.state.loggedIn}/>;
     }
     return (
       <div>
@@ -170,10 +171,15 @@ var SettingsView = React.createClass({
     return (
       <div>
         <SettingsSelectorView />
-        <div className="card">
-          <span id="item1mobile" className="control-content active" style={{padding: "10px"}}>Item 1</span>
-          <span id="item2mobile" className="control-content" style={{padding: "10px"}}>Item 2</span>
-          <span id="item3mobile" className="control-content" style={{padding: "10px"}}>Item 3</span>
+        <div>
+          <div id="item1mobile" className="control-content active">
+            <LoginView loggedIn={this.props.loggedIn} />
+          </div>
+
+          <div id="item2mobile" className="control-content" style={{ margin: "10px"}}>
+            <p>Select the number of log entries to display</p>
+            <LogReaderSettingView />
+          </div>
         </div>
       </div>
     );
@@ -193,6 +199,47 @@ var SettingsSelectorView = React.createClass({
           Log Viewer
         </a>
       </div>
+    );
+  }
+
+});
+
+var LoginView = React.createClass({
+
+  render: function() {
+    return (
+      <form style={{padding: "10px"}}>
+        <input type="text" placeholder="Username" />
+        <input type="text" type="password" placeholder="Password" />
+        <button type="submit" className="btn btn-positive btn-block">Login</button>
+      </form>
+    );
+  }
+
+});
+
+var LogReaderSettingView = React.createClass({
+
+  render: function() {
+    var options = [];
+    for (var i=10; i <= 100; i+=10) {
+      options.push(<LogReaderLineOptions lines={i} />);
+    }
+
+    return (
+      <select style={{margin: "0px"}}>
+        {options}
+      </select>
+    );
+  }
+
+});
+
+var LogReaderLineOptions = React.createClass({
+
+  render: function() {
+    return (
+      <option value="this.props.lines">{this.props.lines}</option>
     );
   }
 
