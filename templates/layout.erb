@@ -5,11 +5,33 @@
     <title>Lager</title>
 
     <!-- Sets initial viewport load and disables zooming  -->
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Lager">
+
+    <script type="text/javascript">
+      (function(document,navigator,standalone) {
+        // Prevents links in apps from oppening in mobile Safari
+        // This javascript must be the first script in your <head>
+        if ((standalone in navigator) && navigator[standalone]) {
+          var curnode, location=document.location, stop=/^(a|html)$/i;
+          document.addEventListener('click', function(e) {
+            curnode=e.target;
+            while (!(stop).test(curnode.nodeName)) {
+              curnode=curnode.parentNode;
+            }
+            // If you want this to affect all links and not just your app, use if('href' in curnode) instead.
+            if('href' in curnode && ( curnode.href.indexOf('http') || ~curnode.href.indexOf(location.host) ) ) {
+              e.preventDefault();
+              location.href = curnode.href;
+            }
+          }, false);
+        }
+      })(document,window.navigator,'standalone');
+    </script>
 
     <script src="/lib/JSXTransformer.js"></script>
     <script src="/lib/react.js"></script>
@@ -17,6 +39,7 @@
     <script src="/lib/jquery-1.11.3.min.js"></script>
     <link rel="stylesheet" href="/lib/css/ratchet.min.css" />
     <link rel="stylesheet" href="/lib/css/ratchet-theme-ios.min.css" />
+
   </head>
   <body>
 
