@@ -246,6 +246,11 @@ var NewAccountView = React.createClass({
 
 var LogReaderSettingView = React.createClass({
 
+  _setLines: function() {
+    var lines = React.findDOMNode(this.refs.logLines).value;
+    localStorage.setItem('lines', lines);
+  },
+
   render: function() {
     var options = [];
     for (var i=10; i <= 100; i+=10) {
@@ -253,7 +258,7 @@ var LogReaderSettingView = React.createClass({
     }
 
     return (
-      <select style={{margin: "0px"}}>
+      <select style={{margin: "0px"}} ref="logLines" onChange={this._setLines} value={options}>
         {options}
       </select>
     );
@@ -265,7 +270,7 @@ var LogReaderLineOption = React.createClass({
 
   render: function() {
     return (
-      <option value="this.props.lines">{this.props.lines}</option>
+      <option value={this.props.lines}>{this.props.lines}</option>
     );
   }
 
