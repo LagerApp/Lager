@@ -173,7 +173,7 @@ var SettingsView = React.createClass({
         <SettingsSelectorView />
         <div>
           <div id="item1mobile" className="control-content active">
-            <LoginView loggedIn={this.props.loggedIn} />
+            <NewAccountView loggedIn={this.props.loggedIn} />
           </div>
 
           <div id="item2mobile" className="control-content" style={{ margin: "10px"}}>
@@ -204,7 +204,25 @@ var SettingsSelectorView = React.createClass({
 
 });
 
-var LoginView = React.createClass({
+var NewAccountView = React.createClass({
+  _createAccount: function(e) {
+    e.preventDefault();
+    var username = React.findDOMNode(this.refs.username).value;
+    var password = React.findDOMNode(this.refs.password).value;
+
+    // Dummy ajax call, wait for endpoint to be setup
+    $.ajax({
+      type: 'POST',
+      url: '/',
+      data: {
+        username: username,
+        password: password
+      },
+      success: function(res) {
+        localStorage.setItem('loggedIn', true);
+      }
+    });
+  },
 
   render: function() {
     if (this.props.loggedIn) {
@@ -216,10 +234,10 @@ var LoginView = React.createClass({
       );
     }
     return (
-      <form style={{padding: "10px"}}>
-        <input type="text" placeholder="Username" />
-        <input type="text" type="password" placeholder="Password" />
-        <button type="submit" className="btn btn-positive btn-block">Login</button>
+      <form style={{padding: "10px"}} onSubmit={this._createAccount}>
+        <input ref="username" type="text" placeholder="Username" />
+        <input ref="password" type="text" type="password" placeholder="Password" />
+        <button type="submit" className="btn btn-block">New account</button>
       </form>
     );
   }
