@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150916162754) do
+ActiveRecord::Schema.define(version: 20150918073932) do
 
   create_table "servers", force: :cascade do |t|
     t.string  "label"
@@ -31,6 +31,12 @@ ActiveRecord::Schema.define(version: 20150916162754) do
     t.string  "name"
     t.string  "service_type"
     t.integer "server_count"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "password_hash"
+    t.string "auth_token"
   end
 
 end
