@@ -25,7 +25,7 @@
         <img src="http://i.imgur.com/d6HnlPI.png" alt="Lager" width="300" />
       </h3>
 
-      <h3></a>What is Lager?</h3>
+      <h3>What is Lager?</h3>
 
       <p>
         Lager is a logging service that provides a mobile web interface for your devices.
@@ -34,6 +34,30 @@
       <p>
         It runs on your server and sets up a authenticable web interface where you can add servers and service logs to monitor.
       </p>
+
+      <h3>How it works</h3>
+
+      <ol>
+        <li>
+          <p>Clone <a href="http://github.com/lager/lagerapp">LagerApp</a> onto the server you want Sinatra to run on.</p>
+        </li>
+
+        <li>
+          <p>Run: <pre>bundle exec rake db:setup</pre> to set up the Sinatra dependencies and instance.</p>
+        </li>
+
+        <li>
+          <p>Another script will be generated to run on the servers that you want to monitor.</p>
+        </li>
+
+        <li>
+          <p>Unix users with the correct permissions and access control with public/private keys will be setup.</p>
+        </li>
+
+        <li>
+          <p>Enjoy reading logs from your mobile device. 🍻</p>
+        </li>
+      </ol>
 
       <footer class="site-footer">
         <span class="site-footer-owner">
