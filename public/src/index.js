@@ -225,12 +225,17 @@ var NewAccountView = React.createClass({
     });
   },
 
+  _logout: function() {
+    localStorage.removeItem('loggedIn');
+    window.location.hash = 'servers';
+  },
+
   render: function() {
     if (this.props.loggedIn) {
       return (
         <div className="content-padded">
           <p>You're already logged in!</p>
-          <button className="btn btn-negative btn-block">Logout</button>
+          <button className="btn btn-negative btn-block" onClick={this._logout}>Logout</button>
         </div>
       );
     }
