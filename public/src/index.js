@@ -213,13 +213,14 @@ var NewAccountView = React.createClass({
     // Dummy ajax call, wait for endpoint to be setup
     $.ajax({
       type: 'POST',
-      url: '/',
+      url: '/user',
       data: {
         username: username,
         password: password
       },
       success: function(res) {
         localStorage.setItem('loggedIn', true);
+        window.location.hash = 'servers';
       }
     });
   },
