@@ -231,7 +231,8 @@ var NewAccountView = React.createClass({
   },
 
   render: function() {
-    if (this.props.loggedIn) {
+    var loggedIn = localStorage.getItem('loggedIn');
+    if (loggedIn) {
       return (
         <div className="content-padded">
           <p>You're already logged in!</p>
