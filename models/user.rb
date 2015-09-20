@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include BCrypt
-  has_secure_token :auth_token, key_length: 24
+  has_secure_token :auth_token
   validates_presence_of :username, :password
 
   def create
