@@ -114,6 +114,14 @@ class App
     end
   end
 
+  post '/user/?' do
+    user = User.new
+    user.username = params[:username]
+    user.password = params[:password]
+    user.save!
+    return { auth_token: user.auth_token }
+  end
+
   post '/user/auth' do
     user = check_credentials
     if user.nil?
