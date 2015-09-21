@@ -63,7 +63,7 @@ class App
   get '/server/:id/status' do    
     server = Server.find(params[:id])
     check = Net::Ping::External.new(server["host"])
-    status  = Hash["status" => check.ping]
+    status  = {"status" => check.ping}
     content_type :json
     status.to_json
   end

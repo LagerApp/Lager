@@ -21,6 +21,6 @@ def parse_time(data)
 		time = nil		
 	end
 
-	parsed_data = Hash["data" => data, "timestamp" => time]
+	parsed_data = {"data" => data, "timestamp" => time}
 	return parsed_data
 end
