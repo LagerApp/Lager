@@ -95,12 +95,17 @@ var ServiceTableView = React.createClass({
 var ServiceTableViewCell = React.createClass({
 
   render: function() {
+    var serverCountLabel = '';
+    if (this.props.service.servers) {
+      serverCountLabel = <p>Server count: {this.props.service.servers.length}</p>;
+    }
+
     return (
       <li className="table-view-cell">
         <a className="navigate-right" data-ignore="push" href={"/logs/service/" + this.props.service.id}>
           <div>
             <h4>{this.props.service.name}</h4>
-             <p>Server count: {this.props.service.servers.length}</p>
+            {serverCountLabel}
           </div>
         </a>
       </li>
