@@ -29,9 +29,12 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
             raise "could not stream logs" unless success
 
             # "on_data" is called when the process writes something to stdout
-            ch.on_data do |c, data|
-              parsed_data = parse_time(data)
-              ws.send({ host: server[:host], msg: parsed_data }.to_json)              
+            ch.on_data do |c, data|        
+              data.each_line do |line|
+                puts "#{line}"
+                parsed_data = parse_time(line)
+                ws.send({ host: server[:host], msg: parsed_data }.to_json)
+              end
             end
             ch.on_close { puts "done!" }
           end
