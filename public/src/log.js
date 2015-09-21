@@ -11,6 +11,7 @@ var LogApp = React.createClass({
 
   getInitialState: function() {
     return {
+      searchText: "",
       logList: []
     };
   },
@@ -87,13 +88,30 @@ var LogApp = React.createClass({
     )
   },
 
+  _getLogList: function() {
+    return this.state.logList.filter(function(cellElement) {
+      var msg = this._logListCellMessage(cellElement);
+      return (msg.toLowerCase().search(this.state.searchText.toLowerCase()) === -1) ? false : true;
+    }.bind(this));
+  },
+
+  _handleSearchTextChange: function() {
+    var val = React.findDOMNode(this.refs.searchInput).value;
+    this.setState({searchText: val});
+    this.forceUpdate();
+  },
+
+  _logListCellMessage: function(cellElement) {
+    return cellElement._store.props.children._store.props.children;
+  },
+
   render: function() {
     return (
       <div>
         <form>
-          <input type="search" placeholder="Search" />
+          <input type="search" placeholder="Search" onChange={this._handleSearchTextChange} ref="searchInput"/>
           <ul className="table-view">
-            {this.state.logList}
+            {this._getLogList()}
           </ul>
         </form>
       </div>
