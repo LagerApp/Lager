@@ -15,6 +15,7 @@ end
 
 def stream_log(host, logPath, &block)
   connect_to_host(host) do |ch|
+    puts "Tailing log file: #{logPath}"
     ch.exec "tail -n 200 -f #{logPath}" do |ch, success|
       yield(ch, success)
     end
