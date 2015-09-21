@@ -8,9 +8,9 @@ class App
   end
 
   get '/servers' do
-    @servers = Server.all;
+    @servers = Server.includes(:services).all;
     content_type :json
-    @servers.to_json
+    @servers.to_json(:include => :services)
   end
 
   post '/servers' do
