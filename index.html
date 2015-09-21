@@ -36,6 +36,14 @@
         It runs on your server and sets up a authenticable web interface where you can add servers and service logs to monitor.
       </p>
 
+      <h3>Dependencies</h3>
+
+      <ul>
+        <li>
+          <p>Ruby</p>
+        </li>
+      </ul>
+
       <h3>How it works</h3>
 
       <ol>
@@ -44,15 +52,11 @@
         </li>
 
         <li>
-          <p>Run: <pre>bundle exec rake db:setup</pre> to set up the Sinatra dependencies and instance.</p>
+          <p>Run <code>setup.sh</code>. This will set up the sqlite database, a default username and password, and another script to run on the servers you want to monitor. The generated script makes use of a private/public key pair and a restricted unix account that only has access to log folders on other servers.</p>
         </li>
 
         <li>
-          <p>Another script will be generated to run on the servers that you want to monitor.</p>
-        </li>
-
-        <li>
-          <p>Unix users with the correct permissions and access control with public/private keys will be setup.</p>
+          <p>Run <code>ruby app.rb</code> to start the server. We recommend using <a href="http://supervisord.org/">Supervisor</a> to run the server in the background.</p>
         </li>
 
         <li>
