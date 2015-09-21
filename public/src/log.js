@@ -79,9 +79,14 @@ var LogApp = React.createClass({
   },
 
   _createLogListItem: function(log) {
+    var logStyle = {
+      "fontFamily": "monospace",
+      "color": "black",
+      "fontSize": "small"
+    }
     return (
       <li className="table-view-cell" key={this.state.logList.length}>
-        <p>
+        <p style={logStyle}>
           {log.msg}
         </p>
       </li>
