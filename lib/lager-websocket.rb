@@ -30,8 +30,8 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
 
             # "on_data" is called when the process writes something to stdout
             ch.on_data do |c, data|
-              time = parse_time(data)
-              ws.send({ host: server[:host], msg: data, time: time }.to_json)              
+              parsed_data = parse_time(data)
+              ws.send({ host: server[:host], msg: parsed_data }.to_json)              
             end
             ch.on_close { puts "done!" }
           end
