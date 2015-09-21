@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'net/ping'
 
 class App
   get '/' do
@@ -7,9 +8,9 @@ class App
   end
 
   get '/servers' do
-    @servers = Server.all;
+    @servers = Server.includes(:services).all;
     content_type :json
-    @servers.to_json
+    @servers.to_json(:include => :services)
   end
 
   post '/servers' do
@@ -59,17 +60,11 @@ class App
     erb :log
   end
 
-  get '/server/:id/status' do
-    begin
-      @server = Server.find(params[:id])
-      response = Net::HTTP.get_response(URI.parse(@server["host"]))
-      currentStatus = response.code
-      content_type :json
-      currentStatus.to_json
-    rescue Errno::ECONNREFUSED
-      currentStatus = "500"
-      content_type :json
-      currentStatus.to_json
-    end
+  get '/server/:id/status' do    
+    server = Server.find(params[:id])
+    check = Net::Ping::External.new(server["host"])
+    status  = {"status" => check.ping}
+    content_type :json
+    status.to_json
   end
 end

@@ -79,9 +79,14 @@ var LogApp = React.createClass({
   },
 
   _createLogListItem: function(log) {
+    var logStyle = {
+      "fontFamily": "monospace",
+      "color": "black",
+      "fontSize": "small"
+    }
     return (
       <li className="table-view-cell" key={this.state.logList.length}>
-        <p>
+        <p style={logStyle}>
           {log.msg}
         </p>
       </li>
@@ -92,10 +97,12 @@ var LogApp = React.createClass({
     if (this.state.searchText === "") {
       return this.state.logList;
     } else {
-      var searchText = this.state.searchText.toLowerCase();
+      var searchTextArray = this.state.searchText.toLowerCase().split(" ");
       return this.state.logList.filter(function(cellElement) {
         var msg = this._logListCellMessage(cellElement).toLowerCase();
-        return (msg.search(searchText) >= 0);
+        return searchTextArray.every(function(searchText) {
+          return msg.includes(searchText);
+        });
       }.bind(this));
     }
   },
