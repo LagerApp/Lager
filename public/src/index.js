@@ -169,83 +169,7 @@ var SettingsView = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <SettingsSelectorView />
-        <div>
-          <div id="item1mobile" className="control-content active">
-            <NewAccountView loggedIn={this.props.loggedIn} />
-          </div>
-
-          <div id="item2mobile" className="control-content" style={{ margin: "10px"}}>
-            <p>Select the number of log entries to display</p>
-            <LogReaderSettingView />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-});
-
-var SettingsSelectorView = React.createClass({
-
-  render: function() {
-    return (
-      <div className="segmented-control" style={{margin: "10px"}}>
-        <a className="control-item active" href="#item1mobile">
-          Account
-        </a>
-        <a className="control-item" href="#item2mobile">
-          Log Viewer
-        </a>
-      </div>
-    );
-  }
-
-});
-
-var NewAccountView = React.createClass({
-  _createAccount: function(e) {
-    e.preventDefault();
-    var username = React.findDOMNode(this.refs.username).value;
-    var password = React.findDOMNode(this.refs.password).value;
-
-    // Dummy ajax call, wait for endpoint to be setup
-    $.ajax({
-      type: 'POST',
-      url: '/user',
-      data: {
-        username: username,
-        password: password
-      },
-      success: function(res) {
-        localStorage.setItem('loggedIn', true);
-        window.location.hash = 'servers';
-      }
-    });
-  },
-
-  _logout: function() {
-    localStorage.removeItem('loggedIn');
-    window.location.hash = 'servers';
-  },
-
-  render: function() {
-    var loggedIn = localStorage.getItem('loggedIn');
-    if (loggedIn) {
-      return (
-        <div className="content-padded">
-          <p>You're already logged in!</p>
-          <button className="btn btn-negative btn-block" onClick={this._logout}>Logout</button>
-        </div>
-      );
-    }
-    return (
-      <form style={{padding: "10px"}} onSubmit={this._createAccount}>
-        <input ref="username" type="text" placeholder="Username" />
-        <input ref="password" type="text" type="password" placeholder="Password" />
-        <button type="submit" className="btn btn-block">New account</button>
-      </form>
+      <LogReaderSettingView />
     );
   }
 
@@ -265,7 +189,7 @@ var LogReaderSettingView = React.createClass({
     }
 
     return (
-      <select style={{margin: "0px"}} ref="logLines" onChange={this._setLines} value={options}>
+      <select ref="logLines" onChange={this._setLines} value={options}>
         {options}
       </select>
     );
