@@ -95,7 +95,7 @@ var LogApp = React.createClass({
       var searchText = this.state.searchText.toLowerCase();
       return this.state.logList.filter(function(cellElement) {
         var msg = this._logListCellMessage(cellElement).toLowerCase();
-        return (msg.search(searchText) === -1) ? false : true;
+        return (msg.search(searchText) >= 0);
       }.bind(this));
     }
   },
