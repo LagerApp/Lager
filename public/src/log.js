@@ -89,10 +89,15 @@ var LogApp = React.createClass({
   },
 
   _getLogList: function() {
-    return this.state.logList.filter(function(cellElement) {
-      var msg = this._logListCellMessage(cellElement);
-      return (msg.toLowerCase().search(this.state.searchText.toLowerCase()) === -1) ? false : true;
-    }.bind(this));
+    if (this.state.searchText === "") {
+      return this.state.logList;
+    } else {
+      var searchText = this.state.searchText.toLowerCase();
+      return this.state.logList.filter(function(cellElement) {
+        var msg = this._logListCellMessage(cellElement).toLowerCase();
+        return (msg.search(searchText) === -1) ? false : true;
+      }.bind(this));
+    }
   },
 
   _handleSearchTextChange: function() {
