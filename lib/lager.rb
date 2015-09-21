@@ -39,7 +39,7 @@ class App
    services_params = params["services"]
    halt(401, "Not authorized") unless services_params
    services_params["servers"].each do |server_name|
-      server = Server.find_by(label: server_name)
+      server = Server.find_by(host: server_name)
       server.services.create(name: services_params["name"], service_type: 'db')
    end
   end
