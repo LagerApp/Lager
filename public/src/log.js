@@ -92,10 +92,12 @@ var LogApp = React.createClass({
     if (this.state.searchText === "") {
       return this.state.logList;
     } else {
-      var searchText = this.state.searchText.toLowerCase();
+      var searchTextArray = this.state.searchText.toLowerCase().split(" ");
       return this.state.logList.filter(function(cellElement) {
         var msg = this._logListCellMessage(cellElement).toLowerCase();
-        return (msg.search(searchText) >= 0);
+        return searchTextArray.every(function(searchText) {
+          return msg.includes(searchText);
+        });
       }.bind(this));
     }
   },
