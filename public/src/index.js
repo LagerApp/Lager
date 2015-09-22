@@ -266,7 +266,7 @@ var LogReaderSettingView = React.createClass({
     }
 
     return (
-      <select style={{margin: "0px"}} ref="logLines" onChange={this._setLines} value={options}>
+      <select style={{margin: "0px"}} ref="logLines" onChange={this._setLines}>
         {options}
       </select>
     );
