@@ -49,14 +49,17 @@ var LagerApp = React.createClass({
   },
 
   componentDidMount: function() {
-    if (this.state.loggedIn) {
-      this._loadData();
-    }
     window.onhashchange = function() {
       var hash = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + hash + '/new');
       this.setState({page: hash});
     }.bind(this);
+
+    if (this.state.loggedIn) {
+      this._loadData();
+    } else {
+      window.location.hash = 'settings';
+    }
   },
 
   render: function() {
