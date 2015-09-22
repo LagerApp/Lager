@@ -233,7 +233,7 @@ var NewAccountView = React.createClass({
 
   _logout: function() {
     localStorage.setItem('auth_token', '');
-    window.location.hash = 'servers';
+    this.forceUpdate();
   },
 
   render: function() {
