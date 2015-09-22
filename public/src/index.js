@@ -22,16 +22,6 @@ var LagerApp = React.createClass({
     });
   },
 
-  componentDidMount: function() {
-    this._loadServicesData();
-    this._loadServersData();
-    window.onhashchange = function() {
-      var hash = window.location.hash.substring(1);
-      $('header a.pull-right').attr('href', '/' + hash + '/new');
-      this.setState({page: hash});
-    }.bind(this);
-  },
-
   getInitialState: function() {
     var page = "services";
     if (window.location.hash) {
@@ -45,6 +35,16 @@ var LagerApp = React.createClass({
       servers: [],
       loggedIn: localStorage.getItem('loggedIn')
     };
+  },
+
+  componentDidMount: function() {
+    this._loadServicesData();
+    this._loadServersData();
+    window.onhashchange = function() {
+      var hash = window.location.hash.substring(1);
+      $('header a.pull-right').attr('href', '/' + hash + '/new');
+      this.setState({page: hash});
+    }.bind(this);
   },
 
   render: function() {
