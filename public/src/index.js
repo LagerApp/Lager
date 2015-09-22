@@ -23,12 +23,6 @@ var LagerApp = React.createClass({
   },
 
   componentDidMount: function() {
-    window.onhashchange = function() {
-      this.setState({page: window.location.hash.substring(1)});
-    }.bind(this);
-  },
-
-  componentDidMount: function() {
     this._loadServicesData();
     this._loadServersData();
     window.onhashchange = function() {
