@@ -1,6 +1,6 @@
 var LagerApp = React.createClass({
 
-  loadServersData: function() {
+  _loadServersData: function() {
     $.ajax({
       url: "/servers",
       dataType: 'json',
@@ -11,7 +11,7 @@ var LagerApp = React.createClass({
     });
   },
 
-  loadServicesData: function() {
+  _loadServicesData: function() {
     $.ajax({
       url: "/services",
       dataType: 'json',
@@ -29,8 +29,8 @@ var LagerApp = React.createClass({
   },
 
   componentDidMount: function() {
-    this.loadServicesData();
-    this.loadServersData();
+    this._loadServicesData();
+    this._loadServersData();
     window.onhashchange = function() {
       var hash = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + hash + '/new');
