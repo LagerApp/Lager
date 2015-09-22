@@ -4,32 +4,43 @@ require 'uri'
 class App
   helpers do
     def protected!
-      return if authorized?
-      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-      halt 401, "Not authorized\n"
+      return if !!authorized_user
+      respond_as_unauthorized
     end
 
-    def authorized?
+    def authorized_user
       @auth ||=  Rack::Auth::Basic::Request.new(request.env)
       if @auth.provided? && @auth.basic? && @auth.credentials
-        user = User.where(username: @auth.credentials[0]).last
-        user && user.valid_token?(@auth.credentials[1])
+        return check_token_and_get_user(
+          username: @auth.credentials[0],
+          auth_token: @auth.credentials[1]
+        )
       else
-        false
+        return nil
       end
     end
 
-    def check_credentials
-      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-      if @auth.provided? && @auth.basic? && @auth.credentials
-        user = User.where(
-          username: @auth.credentials[0],
-        ).last
-        if user && user.password == @auth.credentials[1]
-          return user
-        end
+    def check_token_and_get_user(params)
+      user = User.where(username: params[:username]).last
+      if user && user.valid_token?(params[:auth_token])
+        return user
       end
       return nil
+    end
+
+    def check_password_and_get_user(params)
+      user = User.where(
+        username: params[:username],
+      ).last
+      if user && user.password == params[:password]
+        return user
+      end
+      return nil
+    end
+
+    def respond_as_unauthorized
+      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+      halt 401, "Not authorized\n"
     end
   end
 
@@ -47,7 +58,7 @@ class App
   post '/servers' do
     protected!
     server_params = params["server"]
-    halt(401, "Not authorized") unless server_params
+    respond_as_unauthorized unless server_params
     server = Server.create(host: server_params["host"], label: server_params["label"])
   end
 
@@ -74,7 +85,7 @@ class App
   post '/services' do
     protected!
     services_params = params["services"]
-    halt(401, "Not authorized") unless services_params
+    respond_as_unauthorized unless services_params
     services_params["servers"].each do |server_name|
       server = Server.find_by(label: server_name)
       server.services.create(name: services_params["name"], service_type: 'db')
@@ -123,20 +134,18 @@ class App
   end
 
   post '/user/auth' do
-    user = check_credentials
+    user = check_password_and_get_user(params)
     if user.nil?
-      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-      halt 401, "Not authorized\n"
+      respond_as_unauthorized
     else
       return { auth_token: user.auth_token }.to_json
     end
   end
 
   post '/user/logout' do
-    user = check_credentials
+    user = authorized_user
     if user.nil?
-      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-      halt 401, "Not authorized\n"
+      respond_as_unauthorized
     else
       user.regenerate_token
       return
