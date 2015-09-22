@@ -33,13 +33,21 @@ var LagerApp = React.createClass({
       page: page,
       services: [],
       servers: [],
-      loggedIn: localStorage.getItem('loggedIn')
+      loggedIn: localStorage.getItem('auth_token') === ''
     };
   },
 
+  componentWillMount: function() {
+    if (localStorage.getItem('auth_token') == undefined) {
+      localStorage.setItem('auth_token', '');
+    }
+  },
+
   componentDidMount: function() {
-    this._loadServicesData();
-    this._loadServersData();
+    if (this.state.loggedIn) {
+      this._loadServicesData();
+      this._loadServersData();
+    }
     window.onhashchange = function() {
       var hash = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + hash + '/new');
@@ -167,7 +175,7 @@ var SettingsView = React.createClass({
         <SettingsSelectorView />
         <div>
           <div id="item1mobile" className="control-content active">
-            <NewAccountView loggedIn={this.props.loggedIn} />
+            <NewAccountView />
           </div>
 
           <div id="item2mobile" className="control-content" style={{ margin: "10px"}}>
@@ -204,28 +212,27 @@ var NewAccountView = React.createClass({
     var username = React.findDOMNode(this.refs.username).value;
     var password = React.findDOMNode(this.refs.password).value;
 
-    // Dummy ajax call, wait for endpoint to be setup
     $.ajax({
       type: 'POST',
-      url: '/user',
+      url: '/user/auth',
       data: {
         username: username,
         password: password
       },
       success: function(res) {
-        localStorage.setItem('loggedIn', true);
+        localStorage.setItem('auth_token', JSON.parse(res).auth_token);
         window.location.hash = 'servers';
       }
     });
   },
 
   _logout: function() {
-    localStorage.removeItem('loggedIn');
+    localStorage.setItem('auth_token', '');
     window.location.hash = 'servers';
   },
 
   render: function() {
-    var loggedIn = localStorage.getItem('loggedIn');
+    var loggedIn = localStorage.getItem('auth_token') !== '';
     if (loggedIn) {
       return (
         <div className="content-padded">
@@ -238,7 +245,7 @@ var NewAccountView = React.createClass({
       <form style={{padding: "10px"}} onSubmit={this._createAccount}>
         <input ref="username" type="text" placeholder="Username" />
         <input ref="password" type="text" type="password" placeholder="Password" />
-        <button type="submit" className="btn btn-block">New account</button>
+        <button type="submit" className="btn btn-positive btn-block">Log in</button>
       </form>
     );
   }
