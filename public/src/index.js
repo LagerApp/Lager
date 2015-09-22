@@ -33,7 +33,7 @@ var LagerApp = React.createClass({
       page: page,
       services: [],
       servers: [],
-      loggedIn: localStorage.getItem('auth_token') === ''
+      loggedIn: localStorage.getItem('auth_token') !== ''
     };
   },
 
