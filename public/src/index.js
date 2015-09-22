@@ -37,6 +37,11 @@ var LagerApp = React.createClass({
     };
   },
 
+  _loadData: function() {
+    this._loadServersData();
+    this._loadServicesData();
+  },
+
   componentWillMount: function() {
     if (localStorage.getItem('auth_token') == undefined) {
       localStorage.setItem('auth_token', '');
@@ -45,8 +50,7 @@ var LagerApp = React.createClass({
 
   componentDidMount: function() {
     if (this.state.loggedIn) {
-      this._loadServicesData();
-      this._loadServersData();
+      this._loadData();
     }
     window.onhashchange = function() {
       var hash = window.location.hash.substring(1);
@@ -77,7 +81,7 @@ var LagerApp = React.createClass({
       $("#services-tab-item").removeClass("active");
       $('header a.pull-right').hide();
 
-      tableView = <SettingsView loggedIn={this.state.loggedIn}/>;
+      tableView = <SettingsView loggedIn={this.state.loggedIn} loadData={this._loadData} />;
     }
     return (
       <div>
@@ -175,7 +179,7 @@ var SettingsView = React.createClass({
         <SettingsSelectorView />
         <div>
           <div id="item1mobile" className="control-content active">
-            <NewAccountView />
+            <NewAccountView loadData={this.props.loadData} />
           </div>
 
           <div id="item2mobile" className="control-content" style={{ margin: "10px"}}>
@@ -222,7 +226,8 @@ var NewAccountView = React.createClass({
       success: function(res) {
         localStorage.setItem('auth_token', JSON.parse(res).auth_token);
         window.location.hash = 'servers';
-      }
+        this.props.loadData();
+      }.bind(this)
     });
   },
 
