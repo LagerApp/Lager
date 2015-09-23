@@ -25,29 +25,28 @@ EM::WebSocket.start(:host => "0.0.0.0", :port => 4001) do |ws|
     # DEMO
     #
     ###
-    fake_stream_log("/opt/lager/fake.log", ws)
+    fake_stream_log("/Users/jin/Code/Lager/app/fake.log", ws)
 
-    case data["type"]
-    when "service"
-      service = Service.includes(:servers).find(data["id"])
-      service.servers.each do |server|
-        Thread.new do
-          stream_log(server[:host], @log_paths[service[:service_type]]) do |ch, success|
-            raise "could not stream logs" unless success
+    # case data["type"]
+    # when "service"
+    #   service = Service.includes(:servers).find(data["id"])
+    #   service.servers.each do |server|
+    #     Thread.new do
+    #       stream_log(server[:ip], @log_paths[service[:service_type]]) do |ch, success|
+    #         raise "could not stream logs" unless success
 
-            # "on_data" is called when the process writes something to stdout
-            ch.on_data do |c, data|
-              parsed_data = parse_time(data)
-              ws.send({ host: server[:host], msg: parsed_data }.to_json)              
-            end
-            ch.on_close { puts "done!" }
-          end
-        end
-      end
-    when "server"
-      raise 'unsupported operation' # to implement
-    else
-      raise 'unsupported operation'
-    end
+    #         # "on_data" is called when the process writes something to stdout
+    #         ch.on_data do |c, data|
+    #           ws.send({ host: server[:host], msg: data }.to_json)
+    #         end
+    #         ch.on_close { puts "done!" }
+    #       end
+    #     end
+    #   end
+    # when "server"
+    #   raise 'unsupported operation' # to implement
+    # else
+    #   raise 'unsupported operation'
+    # end
   end
 end

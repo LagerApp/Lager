@@ -2,11 +2,22 @@ var LogApp = React.createClass({
 
   componentDidMount: function() {
     this._startSpinner();
+    $("#content")[0].addEventListener('scroll', this._handleScrollEvent);
     $.get("/service/" + this.props.service_id, function(service) {
       $(".title").html(service.name);
       this.setState({ service: service });
       this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);
     }.bind(this))
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
+    var currOffset = $("#content").offset();
+    var firstElemHeight = $($("li")[0]).height();
+    console.log(currOffset, firstElemHeight);
+    var newOffset = currOffset - firstElemHeight;
+
+    $("#content").offset({top: newOffset});
+    console.log($("#content").offset());
   },
 
   getInitialState: function() {
@@ -48,6 +59,12 @@ var LogApp = React.createClass({
 
   _stopSpinner: function() {
     $("body").spin(false);
+  },
+
+  _handleScrollEvent: function() {
+    console.log("wat");
+    var formElement = $(React.findDOMNode(this.refs.form));
+    console.log(formElement.position());
   },
 
   _connectWebsocket: function(host, service) {
@@ -120,7 +137,7 @@ var LogApp = React.createClass({
   render: function() {
     return (
       <div>
-        <form>
+        <form ref="form">
           <input type="search" placeholder="Search" onChange={this._handleSearchTextChange} ref="searchInput"/>
           <ul className="table-view">
             {this._getLogList()}
