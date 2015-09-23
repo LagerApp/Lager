@@ -37,12 +37,17 @@ class App
   end
 
   post '/services' do
-   services_params = params["services"]
-   halt(401, "Not authorized") unless services_params
-   services_params["servers"].each do |server_name|
-      server = Server.find_by(host: server_name)
-      server.services.create(name: services_params["name"], service_type: 'db')
-   end
+    services_params = params["services"]
+    halt(400, "Services Params missing") unless services_params
+
+    service = Service.create(name: services_params["name"], service_type: services_params["service_type"])
+    halt(400, service.errors.to_json) unless service.valid?
+
+    service.servers << services_params["servers"].map do |server_name|
+      Server.find_by(host: server_name)
+    end
+    service.save!
+    service.to_json
   end
 
   get '/service/:id' do
@@ -60,7 +65,7 @@ class App
     erb :log
   end
 
-  get '/server/:id/status' do    
+  get '/server/:id/status' do
     server = Server.find(params[:id])
     check = Net::Ping::External.new(server["host"])
     status  = {"status" => check.ping}
