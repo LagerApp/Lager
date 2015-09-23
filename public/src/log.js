@@ -103,9 +103,9 @@ var LogApp = React.createClass({
     }
     return (
       <li className="table-view-cell" key={this.state.logList.length}>
-        <p style={logStyle}>
-          {log.msg}
-        </p>
+        <span style={logStyle}>
+          {"[" + log.host + "]: " + log.msg}
+        </span>
       </li>
     )
   },
