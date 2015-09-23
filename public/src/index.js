@@ -145,10 +145,29 @@ var ServerTableView = React.createClass({
 
 var ServerTableViewCell = React.createClass({
 
+  componentDidMount: function() {
+    this._getServerStatus(this.props.server)
+  },
+
+  getInitialState: function() {
+    return {
+      status: false
+    };
+  },
+
+  _getServerStatus: function(server) {
+    $.ajax({
+      url: "/server/" + server.id + "/status",
+      dataType: 'json',
+      cache: false,
+      success: function(data) { this.setState(data) }.bind(this)
+    });
+  },
+
   render: function() {
     var server = this.props.server;
-    var statusClass = server.status ? "btn btn-positive" : "btn btn-negative";
-    var status = server.status ? "Up" : "Down";
+    var statusClass = this.state.status ? "btn btn-positive" : "btn btn-negative";
+    var status = this.state.status ? "Up" : "Down";
     return (
       <li className="table-view-cell">
         <a className="navigate-right" href="#server-services" data-transition="slide-in" onClick={this.props.loadServerServiceData.bind(null, server)}>
