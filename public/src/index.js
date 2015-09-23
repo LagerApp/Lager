@@ -4,7 +4,7 @@ var LagerApp = React.createClass({
     $.ajax({
       url: "/servers",
       dataType: 'json',
-      cache: false,
+      cache: true,
       success: function(data) {
         this.setState({ servers: data });
       }.bind(this)
@@ -15,7 +15,7 @@ var LagerApp = React.createClass({
     $.ajax({
       url: "/services",
       dataType: 'json',
-      cache: false,
+      cache: true,
       success: function(data) {
         this.setState({ services: data });
       }.bind(this)
@@ -28,10 +28,8 @@ var LagerApp = React.createClass({
     });
   },
 
-  componentDidMount: function() {
-    window.onhashchange = function() {
-      this.setState({page: window.location.hash.substring(1)});
-    }.bind(this);
+  componentWillMount: function() {
+    $.ajaxSetup({cache: true});
   },
 
   componentDidMount: function() {
