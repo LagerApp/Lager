@@ -84,7 +84,7 @@ var ServiceTableView = React.createClass({
 
   _generateServiceTableViewCells: function() {
     return this.props.services.map(function(service){
-      return (<ServiceTableViewCell service={service} key={service.name} />)
+      return (<ServiceTableViewCell service={service} key={service.name + service.id} />)
     });
   },
 
