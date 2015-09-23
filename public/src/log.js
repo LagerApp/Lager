@@ -84,10 +84,13 @@ var LogApp = React.createClass({
       "color": "black",
       "fontSize": "small"
     }
+    var host = log.host;
+    var message = log.msg.data;
+    var timestamp = log.msg.timestamp;
     return (
       <li className="table-view-cell" key={this.state.logList.length}>
         <span style={logStyle}>
-          {"[" + log.host + "]: " + log.msg}
+          {"[" + host + "]: " + message}
         </span>
       </li>
     )
