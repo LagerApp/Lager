@@ -85,9 +85,7 @@ var LagerApp = React.createClass({
   },
 
   componentDidUpdate: function(prevProps, prevState) {
-    if (this.state.loggedIn) {
-      this._loadData();
-    } else {
+    if (!this.state.loggedIn) {
       window.location.hash = 'settings';
     }
   },
