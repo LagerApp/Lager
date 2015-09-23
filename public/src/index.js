@@ -188,9 +188,21 @@ var ServerTableViewCell = React.createClass({
 var ServerServicesTableView = React.createClass({
 
   _generateServiceTableViewCells: function() {
-    return this.props.services.map(function(service, idx){
-      return (<ServiceTableViewCell service={service} key={idx} />)
-    });
+    if (this.props.services.length > 0) {
+      return this.props.services.map(function(service, idx){
+        return (<ServiceTableViewCell service={service} key={idx} />)
+      });
+    } else {
+      return (
+        <li>
+          <div className="content-padded">
+            <p>
+              No services configured. Please <a href="/services/new" data-ignore="push">add a service</a> to this server.
+            </p>
+          </div>
+        </li>
+      )
+    }
   },
 
   render: function() {
