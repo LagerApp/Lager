@@ -1,7 +1,13 @@
 var LagerApp = React.createClass({
 
   _loadServersData: function() {
+    var username = localStorage.getItem('username');
+    var authToken = localStorage.getItem('auth_token');
+
     $.ajax({
+      headers: {
+        'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+      },
       url: "/servers",
       dataType: 'json',
       cache: false,
@@ -12,7 +18,13 @@ var LagerApp = React.createClass({
   },
 
   _loadServicesData: function() {
+    var username = localStorage.getItem('username');
+    var authToken = localStorage.getItem('auth_token');
+
     $.ajax({
+      headers: {
+        'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+      },
       url: "/services",
       dataType: 'json',
       cache: false,
@@ -46,6 +58,10 @@ var LagerApp = React.createClass({
     if (localStorage.getItem('auth_token') == undefined) {
       localStorage.setItem('auth_token', '');
     }
+
+    if (localStorage.getItem('username') == undefined) {
+      localStorage.setItem('username', '');
+    }
   },
 
   componentDidMount: function() {
@@ -55,6 +71,14 @@ var LagerApp = React.createClass({
       this.setState({page: hash});
     }.bind(this);
 
+    if (this.state.loggedIn) {
+      this._loadData();
+    } else {
+      window.location.hash = 'settings';
+    }
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
     if (this.state.loggedIn) {
       this._loadData();
     } else {
@@ -228,6 +252,7 @@ var NewAccountView = React.createClass({
       },
       success: function(res) {
         localStorage.setItem('auth_token', JSON.parse(res).auth_token);
+        localStorage.setItem('username', username);
         window.location.hash = 'servers';
         this.props.loadData();
       }.bind(this)
@@ -236,6 +261,7 @@ var NewAccountView = React.createClass({
 
   _logout: function() {
     localStorage.setItem('auth_token', '');
+    localStorage.setItem('username', '');
     this.forceUpdate();
   },
 
