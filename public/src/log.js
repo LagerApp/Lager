@@ -11,6 +11,7 @@ var LogApp = React.createClass({
 
   getInitialState: function() {
     return {
+      searchText: "",
       logList: []
     };
   },
@@ -78,22 +79,51 @@ var LogApp = React.createClass({
   },
 
   _createLogListItem: function(log) {
+    var logStyle = {
+      "fontFamily": "monospace",
+      "color": "black",
+      "fontSize": "small"
+    }
     return (
       <li className="table-view-cell" key={this.state.logList.length}>
-        <p>
-          {log.msg}
-        </p>
+        <span style={logStyle}>
+          {"[" + log.host + "]: " + log.msg}
+        </span>
       </li>
     )
+  },
+
+  _getLogList: function() {
+    if (this.state.searchText === "") {
+      return this.state.logList;
+    } else {
+      var searchTextArray = this.state.searchText.toLowerCase().split(" ");
+      return this.state.logList.filter(function(cellElement) {
+        var msg = this._logListCellMessage(cellElement).toLowerCase();
+        return searchTextArray.every(function(searchText) {
+          return msg.includes(searchText);
+        });
+      }.bind(this));
+    }
+  },
+
+  _handleSearchTextChange: function() {
+    var val = React.findDOMNode(this.refs.searchInput).value;
+    this.setState({searchText: val});
+    this.forceUpdate();
+  },
+
+  _logListCellMessage: function(cellElement) {
+    return cellElement._store.props.children._store.props.children;
   },
 
   render: function() {
     return (
       <div>
         <form>
-          <input type="search" placeholder="Search" />
+          <input type="search" placeholder="Search" onChange={this._handleSearchTextChange} ref="searchInput"/>
           <ul className="table-view">
-            {this.state.logList}
+            {this._getLogList()}
           </ul>
         </form>
       </div>

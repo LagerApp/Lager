@@ -15,25 +15,6 @@
 $('header .title').text('Add a new service');
 
 // Dummy data to be replaced by Ajax call
-var serverData = [
-  {
-    host: "app1.sg",
-    ip: "1.1.1.1",
-    status: true
-  },
-  {
-    host: "app2.sg",
-    ip: "2.2.2.2",
-    status: false
-  },
-  {
-    host: "db.sg",
-    ip: "3.3.3.3",
-    status: true
-  }
-];
-
-// Dummy data to be replaced by Ajax call
 var serviceData = [
   {
     name: 'nginx',
@@ -69,24 +50,30 @@ var formData = {
   }
 };
 
-// Populate the server selectors
-serverData.forEach(function(server) {
-  $('#serverSelector .next-step').before('<button class="btn btn-block btn-outlined">' + server.host + '</button>');
-});
+$.get("/servers", function(resp) {
+  // Populate the server selectors
+  resp.forEach(function(server) {
+    $('#serverSelector .next-step').before('<button class="btn btn-block btn-outlined">' + server.host + '</button>');
+  });
+  prepareServerButtons();
+})
+
 
 // Turns button into active on touch and stores server selection into form data
-$('button.btn-outlined').on('click', function() {
-  var selectedServer = $(this).text();
-  $(this).toggleClass('active');
+function prepareServerButtons() {
+  $('button.btn-outlined').on('click', function() {
+    var selectedServer = $(this).text();
+    $(this).toggleClass('active');
 
-  var i = formData.services.servers.indexOf(selectedServer);
-  if (i === -1) {
-    formData.services.servers.push(selectedServer);
-  } else {
-    formData.services.servers.splice(i, 1);
-  }
+    var i = formData.services.servers.indexOf(selectedServer);
+    if (i === -1) {
+      formData.services.servers.push(selectedServer);
+    } else {
+      formData.services.servers.splice(i, 1);
+    }
 });
 
+}
 // Populate the service selector
 serviceData.forEach(function(service) {
   var newEl = $('<option class="btn btn-positive btn-block btn-outlined">' + service.name + '</option>');

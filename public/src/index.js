@@ -34,6 +34,12 @@ var LagerApp = React.createClass({
     });
   },
 
+  loadServerServiceData: function(server) {
+    this.setState({
+      services: server.services
+    });
+  },
+
   getInitialState: function() {
     var page = "services";
     if (window.location.hash) {
@@ -94,7 +100,7 @@ var LagerApp = React.createClass({
       $("#services-tab-item").removeClass("active");
       $('header a.pull-right').show();
 
-      tableView = <ServerTableView servers={this.state.servers} />
+      tableView = <ServerTableView servers={this.state.servers} loadServerServiceData={this.loadServerServiceData} />
     } else if (this.state.page === 'services') {
       $('#settings-tab-item').removeClass('active');
       $("#servers-tab-item").removeClass("active");
@@ -102,6 +108,8 @@ var LagerApp = React.createClass({
       $('header a.pull-right').show();
 
       tableView = <ServiceTableView services={this.state.services} />
+    } else if (this.state.page === 'server-services') {
+      tableView = <ServerServicesTableView services={this.state.services} />
     } else {
       $('#settings-tab-item').addClass('active');
       $("#servers-tab-item").removeClass("active");
@@ -142,12 +150,17 @@ var ServiceTableView = React.createClass({
 var ServiceTableViewCell = React.createClass({
 
   render: function() {
+    var serverCountLabel = '';
+    if (this.props.service.servers) {
+      serverCountLabel = <p>Server count: {this.props.service.servers.length}</p>;
+    }
+
     return (
       <li className="table-view-cell">
         <a className="navigate-right" data-ignore="push" href={"/logs/service/" + this.props.service.id}>
           <div>
             <h4>{this.props.service.name}</h4>
-             <p>Server count: {this.props.service.servers.length}</p>
+            {serverCountLabel}
           </div>
         </a>
       </li>
@@ -159,8 +172,9 @@ var ServiceTableViewCell = React.createClass({
 var ServerTableView = React.createClass({
 
   _generateServerTableViewCells: function() {
+    var loadServerServiceData = this.props.loadServerServiceData;
     return this.props.servers.map(function(server, idx){
-      return (<ServerTableViewCell server={server} key={idx} />)
+      return (<ServerTableViewCell server={server} key={idx} loadServerServiceData={loadServerServiceData} />)
     });
   },
 
@@ -179,20 +193,41 @@ var ServerTableView = React.createClass({
 var ServerTableViewCell = React.createClass({
 
   render: function() {
-    var statusClass = this.props.server.status ? "btn btn-positive" : "btn btn-negative";
-    var status = this.props.server.status ? "Up" : "Down";
+    var server = this.props.server;
+    var statusClass = server.status ? "btn btn-positive" : "btn btn-negative";
+    var status = server.status ? "Up" : "Down";
     return (
       <li className="table-view-cell">
-        <a className="navigate-right" href="#" data-transition="slide-in">
+        <a className="navigate-right" href="#server-services" data-transition="slide-in" onClick={this.props.loadServerServiceData.bind(null, server)}>
           <div style={{float: "left"}}>
-            <h4>{this.props.server.host}</h4>
-            <h5>{this.props.server.label}</h5>
+            <h4>{server.host}</h4>
+            <h5>{server.label}</h5>
           </div>
           <button className={statusClass} style={{float: "right"}}>
             {status}
           </button>
         </a>
       </li>
+    );
+  }
+
+});
+
+var ServerServicesTableView = React.createClass({
+
+  _generateServiceTableViewCells: function() {
+    return this.props.services.map(function(service, idx){
+      return (<ServiceTableViewCell service={service} key={idx} />)
+    });
+  },
+
+  render: function() {
+    return (
+      <div>
+        <ul className="table-view">
+          {this._generateServiceTableViewCells()}
+        </ul>
+      </div>
     );
   }
 
@@ -317,5 +352,6 @@ var LogReaderLineOption = React.createClass({
   }
 
 });
+
 
 React.render(<LagerApp />, document.getElementById('content'));
