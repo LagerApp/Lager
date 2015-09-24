@@ -125,8 +125,14 @@ $('#serviceSelector').on('submit', function(e) {
   formData.services.log_path = $('#logPathInput').val();
 
   // Ajax call to POST the new service here
+  var username = localStorage.getItem('username');
+  var authToken = localStorage.getItem('auth_token');
+
   $.ajax({
     method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+    },
     url: '/services',
     data: formData
   }).done(function(resp) {

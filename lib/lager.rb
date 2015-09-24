@@ -71,7 +71,6 @@ class App
   end
 
   get '/servers/new' do
-    protected!
     erb :new_server
   end
 
@@ -104,7 +103,6 @@ class App
   end
 
   get '/services/new' do
-    protected!
     erb :new_service
   end
 
