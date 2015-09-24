@@ -47,7 +47,9 @@ var LagerApp = React.createClass({
       $('header a.pull-right').attr('href', '/' + hash + '/new');
       this.setState({page: hash});
     }.bind(this);
-    window.onhashchange();
+    if (window.location.hash == "") {
+      window.location.hash = "servers";
+    }
   },
 
   getInitialState: function() {
