@@ -83,13 +83,17 @@ class App
   end
 
   post '/services' do
-    protected!
     services_params = params["services"]
-    respond_as_unauthorized unless services_params
-    services_params["servers"].each do |server_name|
-      server = Server.find_by(label: server_name)
-      server.services.create(name: services_params["name"], service_type: 'db')
+    halt(400, "Services Params missing") unless services_params
+
+    service = Service.create(name: services_params["name"], service_type: services_params["service_type"])
+    halt(400, service.errors.to_json) unless service.valid?
+
+    service.servers << services_params["servers"].map do |server_name|
+      Server.find_by(host: server_name)
     end
+    service.save!
+    service.to_json
   end
 
   get '/service/:id' do
@@ -111,25 +115,11 @@ class App
 
   get '/server/:id/status' do
     protected!
-    begin
-      @server = Server.find(params[:id])
-      response = Net::HTTP.get_response(URI.parse(@server["host"]))
-      currentStatus = response.code
-      content_type :json
-      currentStatus.to_json
-    rescue Errno::ECONNREFUSED
-      currentStatus = "500"
-      content_type :json
-      currentStatus.to_json
-    end
-  end
-
-  post '/user/?' do
-    user = User.new
-    user.username = params[:username]
-    user.password = params[:password]
-    user.save!
-    return { auth_token: user.auth_token }
+    server = Server.find(params[:id])
+    check = Net::Ping::External.new(server["host"])
+    status  = {"status" => check.ping}
+    content_type :json
+    status.to_json
   end
 
   post '/user/auth' do

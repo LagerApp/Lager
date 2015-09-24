@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="/manifest.appcache">
   <head>
     <meta charset="utf-8">
     <title>Lager</title>
@@ -10,6 +10,11 @@
     <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/images/57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/144x144.png" />
 
     <script src="/lib/JSXTransformer.js"></script>
     <script src="/lib/react.js"></script>
@@ -23,17 +28,17 @@
     <!-- Make sure all your bars are the first things in your <body> -->
     <header class="bar bar-nav">
       <h1 class="title">Lager</h1>
-      <a class="icon icon-plus pull-right" href="/servers/new" data-transition="slide-in"></a>
+      <a id="right-nav-button" class="icon icon-plus pull-right" href="/servers/new" data-transition="slide-in"></a>
     </header>
 
     <nav class="bar bar-tab">
-      <a id="services-tab-item" class="tab-item" href="/#services" data-ignore="push">
-        <span class="icon icon-pages"></span>
-        <span class="tab-label">Services</span>
-      </a>
       <a id="servers-tab-item" class="tab-item" href="/#servers" data-ignore="push">
         <span class="icon icon-home"></span>
         <span class="tab-label">Servers</span>
+      </a>
+      <a id="services-tab-item" class="tab-item" href="/#services" data-ignore="push">
+        <span class="icon icon-pages"></span>
+        <span class="tab-label">Services</span>
       </a>
       <a id="settings-tab-item" class="tab-item" href="/#settings" data-ignore="push">
         <span class="icon icon-gear"></span>

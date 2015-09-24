@@ -67,13 +67,13 @@ var LogApp = React.createClass({
   },
 
   _connectWebsocket: function(host, service) {
+    this._startSpinner();
     var socket;
     var connect = function(host, service) {
       try {
         socket = new WebSocket(host);
         console.log("Socket State: " + socket.readyState);
         socket.onopen = function() {
-          this._stopSpinner();
           console.log(host + ": " + "Socket Status: " + socket.readyState + " (open)");
           socket.send(JSON.stringify({ type: "service", id: service.id }));
         }.bind(this);
@@ -81,6 +81,7 @@ var LogApp = React.createClass({
           console.log("Socket Status: " + socket.readyState + " (closed)");
         }
         socket.onmessage = function(msg) {
+          this._stopSpinner();
           var result = JSON.parse(msg.data);
           var logList = this.state.logList;
           logList.unshift(this._createLogListItem(result));
@@ -94,17 +95,38 @@ var LogApp = React.createClass({
     connect(host, service);
   },
 
+  getDefaultProps: function() {
+    return {
+      styles: {
+        host: {
+          "paddingRight": "1em",
+          "fontFamily": "monospace",
+          "color": "grey",
+          "fontSize": "x-small"
+        },
+        timestamp: {
+          "fontFamily": "monospace",
+          "color": "grey",
+          "fontSize": "x-small"
+        },
+        log: {
+          "fontFamily": "monospace",
+          "color": "black",
+          "fontSize": "small"
+        }
+      }
+    };
+  },
+
   _createLogListItem: function(log) {
-    var logStyle = {
-      "fontFamily": "monospace",
-      "color": "black",
-      "fontSize": "small"
-    }
+    var host = log.host;
+    var message = log.msg.data;
+    var timestamp = log.msg.timestamp;
     return (
       <li className="table-view-cell" key={this.state.logList.length}>
-        <span style={logStyle}>
-          {"[" + log.host + "]: " + log.msg}
-        </span>
+        <span style={this.props.styles.host}>{host}</span>
+        <span style={this.props.styles.timestamp}>{timestamp}</span><br />
+        <div style={this.props.styles.log}>{message}</div>
       </li>
     )
   },
@@ -114,23 +136,29 @@ var LogApp = React.createClass({
       return this.state.logList;
     } else {
       var searchTextArray = this.state.searchText.toLowerCase().split(" ");
-      return this.state.logList.filter(function(cellElement) {
+      var results = this.state.logList.filter(function(cellElement) {
         var msg = this._logListCellMessage(cellElement).toLowerCase();
         return searchTextArray.every(function(searchText) {
           return msg.includes(searchText);
         });
       }.bind(this));
+      if (results.length == 0) {
+        results = <li className="table-view-cell">No results</li>
+      }
+      return results;
     }
   },
 
   _handleSearchTextChange: function() {
     var val = React.findDOMNode(this.refs.searchInput).value;
     this.setState({searchText: val});
-    this.forceUpdate();
   },
 
   _logListCellMessage: function(cellElement) {
-    return cellElement._store.props.children._store.props.children;
+    var message = cellElement._store.props.children.map(function(child) {
+      return child._store.props.children;
+    }).join(" ");
+    return message;
   },
 
   render: function() {
