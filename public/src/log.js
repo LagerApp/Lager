@@ -11,9 +11,57 @@ var LogApp = React.createClass({
 
   getInitialState: function() {
     return {
+      db: this._openDBConnection(),
       searchText: "",
       logList: []
     };
+  },
+
+  getDefaultProps: function() {
+    return {
+      styles: {
+        host: {
+          "paddingRight": "1em",
+          "fontFamily": "monospace",
+          "color": "grey",
+          "fontSize": "x-small"
+        },
+        timestamp: {
+          "fontFamily": "monospace",
+          "color": "grey",
+          "fontSize": "x-small"
+        },
+        log: {
+          "fontFamily": "monospace",
+          "color": "black",
+          "fontSize": "small"
+        }
+      }
+    };
+  },
+
+  _openDBConnection: function() {
+    var db = new Dexie("Logs");
+    db.version(1).stores({
+      logs: "++id,service_id,host,message,timestamp"
+    });
+    db.open().catch(function(err) { console.error("Unable to open IndexedDB");});
+    return db;
+  },
+
+  _loadCachedLogs: function(service_id) {
+    console.log("loading cached logs");
+    this.state.db.logs.where("service_id").equals(service_id).toArray(function(logs) {
+      this.setState({logList: logs.map(function(log) {
+        return this._createLogListItem({ id: log.id, host: log.host, msg: { data: log.message, timestamp: log.timestamp }});
+      }.bind(this))});
+    }.bind(this));
+  },
+
+  _deleteLogs: function(service_id) {
+    this.state.db.logs.where("service_id").equals(service_id).delete().then(function(count) {
+      console.log("Deleted " + count + "logs");
+    })
   },
 
   _getSpinnerOpts: function() {
@@ -52,6 +100,7 @@ var LogApp = React.createClass({
 
   _connectWebsocket: function(host, service) {
     this._startSpinner();
+    this._loadCachedLogs(service.id);
     var socket;
     var connect = function(host, service) {
       try {
@@ -59,6 +108,7 @@ var LogApp = React.createClass({
         console.log("Socket State: " + socket.readyState);
         socket.onopen = function() {
           console.log(host + ": " + "Socket Status: " + socket.readyState + " (open)");
+          this._deleteLogs(service.id);
           socket.send(JSON.stringify({ type: "service", id: service.id }));
         }.bind(this);
         socket.onclose = function() {
@@ -70,6 +120,12 @@ var LogApp = React.createClass({
           var logList = this.state.logList;
           logList.unshift(this._createLogListItem(result));
           this.setState({logList: logList});
+          this.state.db.logs.add({
+            service_id: this.state.service.id,
+            host: result.host,
+            message: result.msg.data,
+            timestamp: result.msg.timestamp
+          })
         }.bind(this)
       } catch(exception) {
         console.log("Error: " + exception);
@@ -79,35 +135,12 @@ var LogApp = React.createClass({
     connect(host, service);
   },
 
-  getDefaultProps: function() {
-    return {
-      styles: {
-        host: {
-          "paddingRight": "1em",
-          "fontFamily": "monospace",
-          "color": "grey",
-          "fontSize": "x-small"
-        },
-        timestamp: {
-          "fontFamily": "monospace",
-          "color": "grey",
-          "fontSize": "x-small"
-        },
-        log: {
-          "fontFamily": "monospace",
-          "color": "black",
-          "fontSize": "small"
-        }
-      }
-    };
-  },
-
   _createLogListItem: function(log) {
     var host = log.host;
     var message = log.msg.data;
     var timestamp = log.msg.timestamp;
     return (
-      <li className="table-view-cell" key={this.state.logList.length}>
+      <li className="table-view-cell" key={" " + this.state.logList.length + log.id}>
         <span style={this.props.styles.host}>{host}</span>
         <span style={this.props.styles.timestamp}>{timestamp}</span><br />
         <div style={this.props.styles.log}>{message}</div>
