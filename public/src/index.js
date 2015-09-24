@@ -4,7 +4,7 @@ var LagerApp = React.createClass({
     $.ajax({
       url: "/servers",
       dataType: 'json',
-      cache: false,
+      cache: true,
       success: function(data) {
         this.setState({ servers: data });
       }.bind(this)
@@ -15,7 +15,7 @@ var LagerApp = React.createClass({
     $.ajax({
       url: "/services",
       dataType: 'json',
-      cache: false,
+      cache: true,
       success: function(data) {
         this.setState({ services: data });
       }.bind(this)
@@ -28,10 +28,8 @@ var LagerApp = React.createClass({
     });
   },
 
-  componentDidMount: function() {
-    window.onhashchange = function() {
-      this.setState({page: window.location.hash.substring(1)});
-    }.bind(this);
+  componentWillMount: function() {
+    $.ajaxSetup({cache: true});
   },
 
   componentDidMount: function() {
@@ -39,6 +37,13 @@ var LagerApp = React.createClass({
     this.loadServersData();
     window.onhashchange = function() {
       var hash = window.location.hash.substring(1);
+      $('header .title').text(function(hash){
+        if (hash === "servers") {
+          return "Lager | Servers";
+        } else {
+          return "Lager | Services";
+        }
+      }(hash));
       $('header a.pull-right').attr('href', '/' + hash + '/new');
       this.setState({page: hash});
     }.bind(this);
@@ -46,7 +51,7 @@ var LagerApp = React.createClass({
   },
 
   getInitialState: function() {
-    var page = "services";
+    var page = "servers";
     if (window.location.hash) {
       page = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + page + '/new');
@@ -85,7 +90,7 @@ var ServiceTableView = React.createClass({
 
   _generateServiceTableViewCells: function() {
     return this.props.services.map(function(service){
-      return (<ServiceTableViewCell service={service} key={service.name} />)
+      return (<ServiceTableViewCell service={service} key={service.name + service.id} />)
     });
   },
 
@@ -146,10 +151,29 @@ var ServerTableView = React.createClass({
 
 var ServerTableViewCell = React.createClass({
 
+  componentDidMount: function() {
+    this._getServerStatus(this.props.server)
+  },
+
+  getInitialState: function() {
+    return {
+      status: false
+    };
+  },
+
+  _getServerStatus: function(server) {
+    $.ajax({
+      url: "/server/" + server.id + "/status",
+      dataType: 'json',
+      cache: false,
+      success: function(data) { this.setState(data) }.bind(this)
+    });
+  },
+
   render: function() {
     var server = this.props.server;
-    var statusClass = server.status ? "btn btn-positive" : "btn btn-negative";
-    var status = server.status ? "Up" : "Down";
+    var statusClass = this.state.status ? "btn btn-positive" : "btn btn-negative";
+    var status = this.state.status ? "Up" : "Down";
     return (
       <li className="table-view-cell">
         <a className="navigate-right" href="#server-services" data-transition="slide-in" onClick={this.props.loadServerServiceData.bind(null, server)}>

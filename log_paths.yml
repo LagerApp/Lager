@@ -1,1 +1,2 @@
 openvpn: "/var/log/openvpnas.log"
+nginx: "/var/log/nginx/access.log"
