@@ -47,7 +47,7 @@ var LagerApp = React.createClass({
       $('header a.pull-right').attr('href', '/' + hash + '/new');
       this.setState({page: hash});
     }.bind(this);
-    window.location.hash = "servers";
+    window.onhashchange();
   },
 
   getInitialState: function() {
@@ -193,6 +193,10 @@ var ServerTableViewCell = React.createClass({
 
 var ServerServicesTableView = React.createClass({
 
+  componentDidMount: function() {
+    $('header a.pull-right').attr('href', '/services/new');
+  },
+
   _generateServiceTableViewCells: function() {
     if (this.props.services.length > 0) {
       return this.props.services.map(function(service, idx){
@@ -200,12 +204,10 @@ var ServerServicesTableView = React.createClass({
       });
     } else {
       return (
-        <li>
-          <div className="content-padded">
-            <p>
-              No services configured. Please <a href="/services/new" data-ignore="push">add a service</a> to this server.
-            </p>
-          </div>
+        <li className="table-view-cell">
+          <p>
+            No services configured. Please <a href="/services/new" data-ignore="push">add a service</a> to this server.
+          </p>
         </li>
       )
     }
