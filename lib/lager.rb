@@ -103,6 +103,7 @@ class App
   end
 
   get '/services/new' do
+    @log_paths = YAML.load_file('log_paths.yml')
     erb :new_service
   end
 

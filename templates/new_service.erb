@@ -12,6 +12,11 @@
     <hr />
     <select>
       <option selected="selected" disabled="disabled">- Select a service -</option>
+      <% @log_paths.each do |log_name, log_path| %>
+        <option class="btn btn-positive btn-block btn-outlined" data-log-path="<%= log_path %>">
+          <%= log_name %>
+        </option>
+      <% end %>
     </select>
     <input id="serviceNameInput" type="text" placeholder='Label (e.g. app1-nyc, mysql1-sg)'></input>
     <input id="logPathInput" type="text" placeholder='Log filepath (e.g. /var/log/svc.log)'></input>
@@ -23,35 +28,6 @@
 $("#right-nav-button").hide();
 
 $('header .title').text('Select server to log');
-
-// Dummy data to be replaced by Ajax call
-var serviceData = [
-  {
-    name: 'nginx',
-    service_type: 'nginx',
-    default_log: '/var/log/nginx'
-  },
-  {
-    name: 'apache2',
-    service_type: 'apache2',
-    default_log: '/var/log/apache2'
-  },
-  {
-    name: 'mysql',
-    service_type: 'mysql',
-    default_log: '/var/log/mysql'
-  },
-  {
-    name: 'postgresql',
-    service_type: 'postgresql',
-    default_log: '/var/log/pg'
-  },
-  {
-    name: 'Others',
-    service_type: 'Others',
-    default_log: ''
-  }
-];
 
 // Stores the form data
 var formData = {
@@ -89,20 +65,12 @@ function prepareServerButtons() {
 });
 
 }
-// Populate the service selector
-serviceData.forEach(function(service) {
-  var newEl = $('<option class="btn btn-positive btn-block btn-outlined">' + service.service_type + '</option>');
-  $('#serviceSelector select').append(newEl);
-});
 
 // Populate the service log path
 $('#serviceSelector select').on('change', function() {
   $("#confirmServiceButton").attr({ disabled: false })
-  var selectedService = $('#serviceSelector select').val();
-  var selectedServiceLogPath = serviceData.filter(function(service) {
-    return service.service_type === selectedService;
-  });
-  $('#logPathInput').val(selectedServiceLogPath[0].default_log);
+  var selectedLogPath = $('#serviceSelector select').find(":selected").data("log-path");
+  $('#logPathInput').val(selectedLogPath);
 });
 
 // Shifts form to the next step
