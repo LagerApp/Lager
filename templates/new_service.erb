@@ -1,43 +1,54 @@
 <div class="content">
   <div style="padding: 10px;" id="serverSelector">
-    <button class="btn btn-positive btn-block next-step">Next step</button>
+    <button id="confirmServersButton" class="btn btn-positive btn-block next-step" disabled="true">Next step</button>
   </div>
 
   <form id="serviceSelector" style="padding: 10px; display: none;">
+    <div>
+      <h6>Selected servers to log on:<h6>
+      <ul id="selectedServers" class="table-view">
+      </ul>
+    </div>
+    <hr />
     <select>
-      <option>- Select a service -</option>
+      <option selected="selected" disabled="disabled">- Select a service -</option>
     </select>
-    <button class="btn btn-positive btn-block" type="submit">Create new service</button>
+    <input id="serviceNameInput" type="text" placeholder='Label (e.g. app1-nyc, mysql1-sg)'></input>
+    <input id="logPathInput" type="text" placeholder='Log filepath (e.g. /var/log/svc.log)'></input>
+    <button id="confirmServiceButton" class="btn btn-positive btn-block" type="submit" disabled="true">Confirm</button>
   </form>
 
   <script class="load-on-push" type="text/javascript">
 
-$('header .title').text('Add a new service');
+$("#right-nav-button").hide();
+
+$('header .title').text('Select server to log');
 
 // Dummy data to be replaced by Ajax call
 var serviceData = [
   {
     name: 'nginx',
+    service_type: 'nginx',
     default_log: '/var/log/nginx'
   },
   {
     name: 'apache2',
+    service_type: 'apache2',
     default_log: '/var/log/apache2'
   },
   {
     name: 'mysql',
+    service_type: 'mysql',
     default_log: '/var/log/mysql'
   },
   {
     name: 'postgresql',
+    service_type: 'postgresql',
     default_log: '/var/log/pg'
   },
   {
-    name: 'bili',
-    default_log: '/var/log/bili'
-  },
-  {
     name: 'Others',
+    service_type: 'Others',
     default_log: ''
   }
 ];
@@ -46,7 +57,9 @@ var serviceData = [
 var formData = {
   services: {
     servers: [],
-    name: ''
+    name: '',
+    service_type: '',
+    log_path: ''
   }
 };
 
@@ -71,28 +84,35 @@ function prepareServerButtons() {
     } else {
       formData.services.servers.splice(i, 1);
     }
+
+    $("#confirmServersButton").attr({ disabled: (formData.services.servers.length == 0) })
 });
 
 }
 // Populate the service selector
 serviceData.forEach(function(service) {
-  var newEl = $('<option class="btn btn-positive btn-block btn-outlined">' + service.name + '</option>');
+  var newEl = $('<option class="btn btn-positive btn-block btn-outlined">' + service.service_type + '</option>');
   $('#serviceSelector select').append(newEl);
 });
 
 // Populate the service log path
 $('#serviceSelector select').on('change', function() {
+  $("#confirmServiceButton").attr({ disabled: false })
   var selectedService = $('#serviceSelector select').val();
   var selectedServiceLogPath = serviceData.filter(function(service) {
-    return service.name === selectedService;
+    return service.service_type === selectedService;
   });
-  $('.service-default-path').val(selectedServiceLogPath[0].default_log);
+  $('#logPathInput').val(selectedServiceLogPath[0].default_log);
 });
 
 // Shifts form to the next step
 $('.next-step').on('click', function() {
   $('#serverSelector').fadeOut(500, function() {
+    $('header .title').text('Log a new service');
     $('#serviceSelector').fadeIn(500);
+    $('#selectedServers').html(formData.services.servers.map(function(server) {
+      return "<li class='table-view-cell'>" + server + "</li>";
+    }).join(""));
   });
 });
 
@@ -100,7 +120,9 @@ $('.next-step').on('click', function() {
 $('#serviceSelector').on('submit', function(e) {
   e.preventDefault();
 
-  formData.services.name = $('#serviceSelector select').val();
+  formData.services.name = $('#serviceNameInput').val();
+  formData.services.service_type = $('#serviceSelector select').val();
+  formData.services.log_path = $('#logPathInput').val();
 
   // Ajax call to POST the new service here
   $.ajax({
