@@ -200,7 +200,9 @@ var ServerTableView = React.createClass({
 var ServerTableViewCell = React.createClass({
 
   componentDidMount: function() {
-    this._getServerStatus(this.props.server)
+    if (localStorage.getItem('auth_token') !== '') {
+      this._getServerStatus(this.props.server)
+    }
   },
 
   getInitialState: function() {
@@ -210,8 +212,14 @@ var ServerTableViewCell = React.createClass({
   },
 
   _getServerStatus: function(server) {
+    var username = localStorage.getItem('username');
+    var authToken = localStorage.getItem('auth_token');
+
     $.ajax({
       url: "/server/" + server.id + "/status",
+      headers: {
+        'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+      },
       dataType: 'json',
       cache: false,
       success: function(data) { this.setState(data) }.bind(this)
