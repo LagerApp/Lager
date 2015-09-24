@@ -105,7 +105,6 @@ class App
   end
 
   get '/logs/service/:id' do
-    protected!
     @id = params[:id]
     erb :log
   end

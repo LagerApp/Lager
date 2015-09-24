@@ -85,7 +85,7 @@ var LagerApp = React.createClass({
   },
 
   componentDidUpdate: function(prevProps, prevState) {
-    if (!this.state.loggedIn) {
+    if (localStorage.getItem('auth_token') === '') {
       window.location.hash = 'settings';
     }
   },
