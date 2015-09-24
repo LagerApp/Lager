@@ -1,7 +1,13 @@
 var LagerApp = React.createClass({
 
-  loadServersData: function() {
+  _loadServersData: function() {
+    var username = localStorage.getItem('username');
+    var authToken = localStorage.getItem('auth_token');
+
     $.ajax({
+      headers: {
+        'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+      },
       url: "/servers",
       dataType: 'json',
       cache: true,
@@ -11,8 +17,14 @@ var LagerApp = React.createClass({
     });
   },
 
-  loadServicesData: function() {
+  _loadServicesData: function() {
+    var username = localStorage.getItem('username');
+    var authToken = localStorage.getItem('auth_token');
+
     $.ajax({
+      headers: {
+        'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+      },
       url: "/services",
       dataType: 'json',
       cache: true,
@@ -28,13 +40,39 @@ var LagerApp = React.createClass({
     });
   },
 
+  getInitialState: function() {
+    var page = "servers";
+    if (window.location.hash) {
+      page = window.location.hash.substring(1);
+      $('header a.pull-right').attr('href', '/' + page + '/new');
+    }
+    return {
+      logs: [],
+      page: page,
+      services: [],
+      servers: [],
+      loggedIn: localStorage.getItem('auth_token') !== ''
+    };
+  },
+
+  _loadData: function() {
+    this._loadServersData();
+    this._loadServicesData();
+  },
+
   componentWillMount: function() {
     $.ajaxSetup({cache: true});
+
+    if (localStorage.getItem('auth_token') == undefined) {
+      localStorage.setItem('auth_token', '');
+    }
+
+    if (localStorage.getItem('username') == undefined) {
+      localStorage.setItem('username', '');
+    }
   },
 
   componentDidMount: function() {
-    this.loadServicesData();
-    this.loadServersData();
     window.onhashchange = function() {
       var hash = window.location.hash.substring(1);
       $('header .title').text(function(hash){
@@ -47,37 +85,45 @@ var LagerApp = React.createClass({
       $('header a.pull-right').attr('href', '/' + hash + '/new');
       this.setState({page: hash});
     }.bind(this);
-    if (window.location.hash == "") {
-      window.location.hash = "servers";
+
+    if (this.state.loggedIn) {
+      this._loadData();
+    } else {
+      window.location.hash = 'settings';
     }
   },
 
-  getInitialState: function() {
-    var page = "servers";
-    if (window.location.hash) {
-      page = window.location.hash.substring(1);
-      $('header a.pull-right').attr('href', '/' + page + '/new');
+  componentDidUpdate: function(prevProps, prevState) {
+    if (localStorage.getItem('auth_token') === '') {
+      window.location.hash = 'settings';
     }
-    return {
-      logs: [],
-      page: page,
-      services: [],
-      servers: []
-    };
   },
 
   render: function() {
     var tableView;
     if (this.state.page === "servers") {
+      $('#settings-tab-item').removeClass('active');
       $("#servers-tab-item").addClass("active");
       $("#services-tab-item").removeClass("active");
+      $('header a.pull-right').show();
+
       tableView = <ServerTableView servers={this.state.servers} loadServerServiceData={this.loadServerServiceData} />
+    } else if (this.state.page === 'services') {
+      $('#settings-tab-item').removeClass('active');
+      $("#servers-tab-item").removeClass("active");
+      $("#services-tab-item").addClass("active");
+      $('header a.pull-right').show();
+
+      tableView = <ServiceTableView services={this.state.services} />
     } else if (this.state.page === 'server-services') {
       tableView = <ServerServicesTableView services={this.state.services} />
     } else {
+      $('#settings-tab-item').addClass('active');
       $("#servers-tab-item").removeClass("active");
-      $("#services-tab-item").addClass("active");
-      tableView = <ServiceTableView services={this.state.services} />
+      $("#services-tab-item").removeClass("active");
+      $('header a.pull-right').hide();
+
+      tableView = <SettingsView loggedIn={this.state.loggedIn} loadData={this._loadData} />;
     }
     return (
       <div>
@@ -154,7 +200,9 @@ var ServerTableView = React.createClass({
 var ServerTableViewCell = React.createClass({
 
   componentDidMount: function() {
-    this._getServerStatus(this.props.server)
+    if (localStorage.getItem('auth_token') !== '') {
+      this._getServerStatus(this.props.server)
+    }
   },
 
   getInitialState: function() {
@@ -164,8 +212,14 @@ var ServerTableViewCell = React.createClass({
   },
 
   _getServerStatus: function(server) {
+    var username = localStorage.getItem('username');
+    var authToken = localStorage.getItem('auth_token');
+
     $.ajax({
       url: "/server/" + server.id + "/status",
+      headers: {
+        'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+      },
       dataType: 'json',
       cache: false,
       success: function(data) { this.setState(data) }.bind(this)
@@ -226,5 +280,126 @@ var ServerServicesTableView = React.createClass({
   }
 
 });
+
+var SettingsView = React.createClass({
+
+  render: function() {
+    return (
+      <div>
+        <SettingsSelectorView />
+        <div>
+          <div id="item1mobile" className="control-content active">
+            <NewAccountView loadData={this.props.loadData} />
+          </div>
+
+          <div id="item2mobile" className="control-content" style={{ margin: "10px"}}>
+            <p>Select the number of log entries to display</p>
+            <LogReaderSettingView />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+});
+
+var SettingsSelectorView = React.createClass({
+
+  render: function() {
+    return (
+      <div className="segmented-control" style={{margin: "10px"}}>
+        <a className="control-item active" href="#item1mobile">
+          Account
+        </a>
+        <a className="control-item" href="#item2mobile">
+          Log Viewer
+        </a>
+      </div>
+    );
+  }
+
+});
+
+var NewAccountView = React.createClass({
+  _createAccount: function(e) {
+    e.preventDefault();
+    var username = React.findDOMNode(this.refs.username).value;
+    var password = React.findDOMNode(this.refs.password).value;
+
+    $.ajax({
+      type: 'POST',
+      url: '/user/auth',
+      data: {
+        username: username,
+        password: password
+      },
+      success: function(res) {
+        localStorage.setItem('auth_token', JSON.parse(res).auth_token);
+        localStorage.setItem('username', username);
+        window.location.hash = 'servers';
+        this.props.loadData();
+      }.bind(this)
+    });
+  },
+
+  _logout: function() {
+    localStorage.setItem('auth_token', '');
+    localStorage.setItem('username', '');
+    this.forceUpdate();
+  },
+
+  render: function() {
+    var loggedIn = localStorage.getItem('auth_token') !== '';
+    if (loggedIn) {
+      return (
+        <div className="content-padded">
+          <p>You're already logged in!</p>
+          <button className="btn btn-negative btn-block" onClick={this._logout}>Logout</button>
+        </div>
+      );
+    }
+    return (
+      <form style={{padding: "10px"}} onSubmit={this._createAccount}>
+        <input ref="username" type="text" placeholder="Username" />
+        <input ref="password" type="text" type="password" placeholder="Password" />
+        <button type="submit" className="btn btn-positive btn-block">Log in</button>
+      </form>
+    );
+  }
+
+});
+
+var LogReaderSettingView = React.createClass({
+
+  _setLines: function() {
+    var lines = React.findDOMNode(this.refs.logLines).value;
+    localStorage.setItem('lines', lines);
+  },
+
+  render: function() {
+    var options = [];
+    for (var i=10; i <= 100; i+=10) {
+      options.push(<LogReaderLineOption lines={i} key={i} />);
+    }
+
+    return (
+      <select style={{margin: "0px"}} ref="logLines" onChange={this._setLines}>
+        {options}
+      </select>
+    );
+  }
+
+});
+
+var LogReaderLineOption = React.createClass({
+
+  render: function() {
+    return (
+      <option value={this.props.lines}>{this.props.lines}</option>
+    );
+  }
+
+});
+
 
 React.render(<LagerApp />, document.getElementById('content'));

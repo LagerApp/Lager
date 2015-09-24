@@ -19,8 +19,14 @@
       };
 
       // Ajax call to POST the new server here
+      var username = localStorage.getItem('username');
+      var authToken = localStorage.getItem('auth_token');
+
       $.ajax({
         method: "POST",
+        headers: {
+          'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+        },
         url: "/servers",
         data: {
           server: {

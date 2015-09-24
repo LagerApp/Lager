@@ -7,10 +7,13 @@ require 'sinatra/activerecord'
 require 'thin'
 require 'em-websocket'
 require 'file-tail'
+require 'has_secure_token'
+require 'bcrypt'
 
 # Can be used in ./lager.rb like Server.find, Service.all etc
 require './models/server'
 require './models/service'
+require './models/user'
 
 class App < Sinatra::Base
   configure do

@@ -1,12 +1,27 @@
 var LogApp = React.createClass({
 
   componentDidMount: function() {
-    $("#right-nav-button").hide();
-    $.get("/service/" + this.props.service_id, function(service) {
-      $(".title").html(service.name);
-      this.setState({ service: service });
-      this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);
-    }.bind(this))
+    this._startSpinner();
+    var username = localStorage.getItem('username');
+    var authToken = localStorage.getItem('auth_token');
+
+    if (username !== '' && authToken !== '') {
+      $.ajax({
+        url: '/service/' + this.props.service_id,
+        method: 'GET',
+        headers: {
+          'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+        },
+        dataType: 'json',
+        success: function(service) {
+          $(".title").html(service.name);
+          this.setState({ service: service });
+          this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);
+        }.bind(this)
+      });
+    } else {
+      window.location.hash = 'settings';
+    }
   },
 
   getInitialState: function() {
