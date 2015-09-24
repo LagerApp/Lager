@@ -85,7 +85,11 @@ class App
     services_params = params["services"]
     halt(400, "Services Params missing") unless services_params
 
-    service = Service.create(name: services_params["name"], service_type: services_params["service_type"])
+    service = Service.create(
+      name: services_params["name"],
+      service_type: services_params["service_type"],
+      log_path: services_params["log_path"]
+    )
     halt(400, service.errors.to_json) unless service.valid?
 
     service.servers << services_params["servers"].map do |server_name|
