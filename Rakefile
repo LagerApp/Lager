@@ -2,15 +2,9 @@
 require 'dotenv/tasks'
 
 require "sinatra/activerecord/rake"
-require "sinatra/base"
-
 require 'yaml'
 
 namespace :db do
-  task :load_config do
-    # require "./app"
-  end
-
   task :environment => :dotenv do
     current_env = ENV['RACK_ENV']
     db_config = YAML.load_file('config/database.yml')[current_env.to_s]
