@@ -6,7 +6,6 @@ var LogApp = React.createClass({
     var authToken = localStorage.getItem('auth_token');
 
     if (username !== '' && authToken !== '') {
-      console.log('started');
       $.ajax({
         url: '/service/' + this.props.service_id,
         method: 'GET',
