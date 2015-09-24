@@ -37,13 +37,21 @@ var LagerApp = React.createClass({
     this.loadServersData();
     window.onhashchange = function() {
       var hash = window.location.hash.substring(1);
+      $('header .title').text(function(hash){
+        if (hash === "servers") {
+          return "Lager | Servers";
+        } else {
+          return "Lager | Services";
+        }
+      }(hash));
       $('header a.pull-right').attr('href', '/' + hash + '/new');
       this.setState({page: hash});
     }.bind(this);
+    window.location.hash = "servers";
   },
 
   getInitialState: function() {
-    var page = "services";
+    var page = "servers";
     if (window.location.hash) {
       page = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + page + '/new');
