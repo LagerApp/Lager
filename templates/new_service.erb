@@ -27,6 +27,12 @@
 
 $("#right-nav-button").hide();
 
+$('.bar-nav').append('<a id="left-nav-button" class="icon icon-left-nav pull-left"></a>');
+
+$('#left-nav-button').on('click', function() {
+  window.location.href = '/#services';
+});
+
 $('header .title').text('Select server to log');
 
 // Stores the form data

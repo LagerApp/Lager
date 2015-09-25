@@ -1,5 +1,12 @@
 var LogApp = React.createClass({
 
+  componentWillMount: function() {
+    $('.bar-nav').append('<a id="left-nav-button" class="icon icon-left-nav"></a>')
+    $('#left-nav-button').on('click', function() {
+      history.back();
+    });
+  },
+
   componentDidMount: function() {
     $("#right-nav-button").hide();
     this._startSpinner();
