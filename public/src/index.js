@@ -181,7 +181,6 @@ var ServiceTableViewCell = React.createClass({
     if (this.props.service.servers) {
       serverCountLabel = <p>Server count: {this.props.service.servers.length}</p>;
     }
-    console.log(this.props.service);
 
     return (
       <li className="table-view-cell">
