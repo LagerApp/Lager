@@ -27,7 +27,7 @@ var LogApp = React.createClass({
         }.bind(this)
       });
     } else {
-      window.location.hash = 'settings';
+      window.location.href = '/#settings';
     }
   },
 
