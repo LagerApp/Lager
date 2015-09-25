@@ -188,7 +188,7 @@ var ServiceTableViewCell = React.createClass({
         <a className="navigate-right" data-ignore="push" href={"/logs/service/" + this.props.service.id}>
           <div>
             <h4>{this.props.service.name}</h4>
-            <h5>{this.props.service.log_path}</h5>
+            <p>{this.props.service.log_path}</p>
             {serverCountLabel}
           </div>
         </a>
