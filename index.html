@@ -75,7 +75,16 @@
         </li>
 
         <li>
-          <p>Run <code>setup.sh</code> (<a href="https://github.com/LagerApp/Lager/blob/master/setup.sh">link to script</a>). This will set up the web app, sqlite database and a default username and password.</p>
+          <p>Run <code>setup.sh</code> (<a href="https://github.com/LagerApp/Lager/blob/master/setup.sh">link to script</a>). This will set up the web app and a sqlite database.</p>
+        </li>
+
+        <li>
+          To create a user, run the following in the project folder:
+          <code>
+            # irb
+            # irb => require "./app.rb" # should return true, CTRL-C if it doesn't. 
+            # irb => User.create(username: "yourusername", password: "yourpassword")
+          </code>
         </li>
 
         <li>
