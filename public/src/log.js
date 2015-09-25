@@ -1,6 +1,7 @@
 var LogApp = React.createClass({
 
   componentDidMount: function() {
+    $("#right-nav-button").hide();
     this._startSpinner();
     var username = localStorage.getItem('username');
     var authToken = localStorage.getItem('auth_token');
