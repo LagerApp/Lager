@@ -41,7 +41,7 @@ class App
     end
 
     def respond_as_unauthorized
-      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+      # headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
       halt 401, "Not authorized\n"
     end
   end
