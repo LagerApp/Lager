@@ -78,8 +78,10 @@ var LagerApp = React.createClass({
       $('header .title').text(function(hash){
         if (hash === "servers") {
           return "Lager | Servers";
-        } else {
+        } else if (hash === 'services') {
           return "Lager | Services";
+        } else {
+          return 'Lager | Settings';
         }
       }(hash));
       $('header a.pull-right').attr('href', '/' + hash + '/new');
