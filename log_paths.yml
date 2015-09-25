@@ -1,2 +1,6 @@
-openvpn: "/var/log/openvpnas.log"
-nginx: "/var/log/nginx/access.log"
+openvpn: '/var/log/openvpnas.log'
+nginx: '/var/log/nginx/access.log'
+apache2: '/var/log/apache2'
+mysql: '/var/log/mysql'
+postgresql: '/var/log/pg'
+others: ''
