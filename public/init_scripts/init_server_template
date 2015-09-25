@@ -1,0 +1,14 @@
+echo "Creating new UNIX user: lager"
+sudo adduser lager --disabled-password
+sudo mkdir /home/lager/.ssh/
+
+echo "Adding Lager server's SSH keys into authorized_keys"
+sudo echo "PUBLICKEY" | sudo tee --append /home/lager/.ssh/authorized_keys
+
+echo "Installing and setting up ACLs"
+sudo apt-get install acl
+setfacl -m u:lager:r /var/log
+
+ip_address=`dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '"'`
+echo "Notifying Lager server of new server. Make sure that this host can connect to LAGER_HOST"
+curl --data "server[ip]=$ip_address" LAGER_HOST/servers

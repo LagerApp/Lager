@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'net/ssh'
 
-SSH_USER = 'ubuntu'
+SSH_USER = 'lager'
 
 def connect_to_host(host, &block)
   puts "Connecting to #{host}"
