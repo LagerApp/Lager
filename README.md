@@ -1,8 +1,6 @@
 <h3 align="center">
-  <a href="https://github.com/LagerApp/Lager">
-    <img src="http://i.imgur.com/akSDI6o.png" alt="Lager" />
-  </a>
   <div align="center">
+    <img src="http://i.imgur.com/akSDI6o.png" alt="Lager" />
     <h1>Lager</h1>
     <h6>Read server logs on your mobile devices easily.</h6>
   </div>
