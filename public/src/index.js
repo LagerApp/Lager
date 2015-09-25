@@ -370,6 +370,8 @@ var NewAccountView = React.createClass({
   _logout: function() {
     localStorage.setItem('auth_token', '');
     localStorage.setItem('username', '');
+    delete sessionStorage.servers;
+    delete sessionStorage.services;
     this.forceUpdate();
   },
 
@@ -379,6 +381,7 @@ var NewAccountView = React.createClass({
       return (
         <div className="content-padded">
           <p>You're already logged in!</p>
+          <p>All changes will be lost upon logging out.</p>
           <button className="btn btn-negative btn-block" onClick={this._logout}>Logout</button>
         </div>
       );
