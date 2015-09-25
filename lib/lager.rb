@@ -49,6 +49,11 @@ class App
     erb :index
   end
 
+  get '/init' do
+    User.first_or_create(username: 'admin', password: 'admin')
+    erb :init
+  end
+
   get '/servers' do
     @servers = Server.includes(:services).all;
     content_type :json
