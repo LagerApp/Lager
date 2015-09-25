@@ -75,11 +75,15 @@
         </li>
 
         <li>
-          <p>Run <code>setup.sh</code>. This will set up the sqlite database, a default username and password, and another script to run on the servers you want to monitor. The generated script makes use of a private/public key pair and a restricted unix account that only has access to log folders on other servers.</p>
+          <p>Run <code>setup.sh</code> (<a href=""https://github.com/LagerApp/Lager/blob/master/setup.sh>link to script</a>). This will set up the web app, sqlite database and a default username and password.</p>
         </li>
 
         <li>
           <p>Run <code>ruby app.rb</code> to start the server. We recommend using <a href="http://supervisord.org/">Supervisor</a> to run the server in the background.</p>
+        </li>
+
+        <li>
+          <p>Go to <code>/init_script</code> on the server to generate another script to run on the servers you want to monitor. The generated script makes use of a private/public key pair and a restricted unix account that only has access to log folders on other servers. The script template can be found <a href="https://github.com/LagerApp/Lager/blob/master/public/init_scripts/init_server_template">here</a>.</p>
         </li>
 
         <li>
