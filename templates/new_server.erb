@@ -5,6 +5,11 @@
     <button class="btn btn-positive btn-block" type="submit">Create new server</button>
   </form>
   <script class="load-on-push" type="text/javascript" charset="utf-8">
+    $('.bar-nav').append('<a id="left-nav-button" class="icon icon-left-nav pull-left"></a>');
+
+    $('#left-nav-button').on('click', function() {
+      window.location.href = '/#servers';
+    });
 
     $('header a.pull-right').remove();
 
