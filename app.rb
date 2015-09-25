@@ -27,7 +27,7 @@ class App < Sinatra::Base
   require "./lib/lager"
 
   EventMachine.run do
-    Thin::Server.start App, '0.0.0.0', 4000
+    Thin::Server.start App, '0.0.0.0', 4002
     require "./lib/lager-websocket"
   end
 end
