@@ -1,5 +1,5 @@
 echo "Creating new UNIX user: lager"
-sudo adduser lager
+sudo adduser lager --disabled-password
 sudo mkdir /home/lager/.ssh/
 
 echo "Adding Lager server's SSH keys into authorized_keys"
