@@ -9,6 +9,7 @@ require 'em-websocket'
 require 'file-tail'
 require 'has_secure_token'
 require 'bcrypt'
+require 'yaml'
 
 # Can be used in ./lager.rb like Server.find, Service.all etc
 require './models/server'
