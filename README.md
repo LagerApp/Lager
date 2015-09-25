@@ -6,8 +6,6 @@
   </div>
 </h3>
 
-------
-
 Please visit [http://lagerapp.io](http://lagerapp.io) for setup instructions.
 
 ## License
