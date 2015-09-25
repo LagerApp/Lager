@@ -14,6 +14,7 @@ var LogApp = React.createClass({
         },
         dataType: 'json',
         success: function(service) {
+          if (!service.name) { service = JSON.parse(sessionStorage.getItem("services"))[0]; }
           $(".title").html(service.name);
           this.setState({ service: service });
           this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);

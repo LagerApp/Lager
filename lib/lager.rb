@@ -98,9 +98,13 @@ class App
 
   get '/service/:id' do
     protected!
-    @service = Service.first_or_initialize(id: params[:id]);
     content_type :json
+    begin
+    @service = Service.find(params[:id]);
     @service.to_json
+    rescue
+      Service.new.to_json
+    end
   end
 
   get '/services/new' do
