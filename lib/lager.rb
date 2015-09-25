@@ -1,6 +1,7 @@
 require 'net/http'
 require 'uri'
 require 'net/ping'
+require 'faker'
 
 class App
   helpers do
@@ -97,7 +98,7 @@ class App
 
   get '/service/:id' do
     protected!
-    @service = Service.find(params[:id]);
+    @service = Service.first_or_initialize(id: params[:id]);
     content_type :json
     @service.to_json
   end

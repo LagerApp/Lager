@@ -124,7 +124,8 @@ var LogApp = React.createClass({
         socket.onopen = function() {
           console.log(host + ": " + "Socket Status: " + socket.readyState + " (open)");
           this._deleteLogs(service.id);
-          socket.send(JSON.stringify({ type: "service", id: service.id }));
+          service = JSON.parse(sessionStorage.getItem('services')).filter(function(s){return s.name === service.name;})[0]
+          socket.send(JSON.stringify({ type: "service", service: service }));
         }.bind(this);
         socket.onclose = function() {
           console.log("Socket Status: " + socket.readyState + " (closed)");

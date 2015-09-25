@@ -21,3 +21,9 @@ def stream_log(host, logPath, &block)
     end
   end
 end
+
+def generate_fake_log(service, ws)
+  msg = { host: service["servers"].sample["host"], msg: { data: "Sample msg for #{service["name"]} - #{Faker::Hacker.say_something_smart}", timestamp: Time.now } }.to_json
+  ws.send(msg)
+  sleep rand(0..1.0)
+end
