@@ -144,16 +144,16 @@ class App
     end
   end
 
-  get '/build_script' do
-    build_script = File.read('./public/build_scripts/init_server_template')
+  get '/init_script' do
+    build_script = File.read('./public/init_scripts/init_server_template')
     public_key = File.read("#{Dir.home}/.ssh/id_rsa.pub").strip
     server_ip = `dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '"'`.strip
     build_script.gsub!('PUBLICKEY', public_key)
     build_script.gsub!('LAGER_HOST', "http://#{server_ip}:4000")
 
-    File.open('./public/build_scripts/init_server.sh', 'w') do |init_script|
+    File.open('./public/init_scripts/init_server.sh', 'w') do |init_script|
       init_script.write(build_script)
     end
-    redirect '/build_scripts/init_server.sh'
+    redirect '/init_scripts/init_server.sh'
   end
 end
