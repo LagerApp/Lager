@@ -6,20 +6,10 @@ var LogApp = React.createClass({
     var authToken = localStorage.getItem('auth_token');
 
     if (username !== '' && authToken !== '') {
-      $.ajax({
-        url: '/service/' + this.props.service_id,
-        method: 'GET',
-        headers: {
-          'Authorization': 'Basic ' + btoa(username + ':' + authToken)
-        },
-        dataType: 'json',
-        success: function(service) {
-          if (!service.name) { service = JSON.parse(sessionStorage.getItem("services"))[0]; }
-          $(".title").html(service.name);
-          this.setState({ service: service });
-          this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);
-        }.bind(this)
-      });
+      service = JSON.parse(sessionStorage.getItem("services")).filter(function(s){ return s.id == this.props.service_id }.bind(this))[0];
+      $(".title").html(service.name);
+      this.setState({ service: service });
+      this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);
     } else {
       window.location.hash = 'settings';
     }
