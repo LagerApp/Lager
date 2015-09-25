@@ -19,7 +19,7 @@ var LogApp = React.createClass({
       this.setState({ service: service });
       this._connectWebsocket("ws://" + window.location.hostname + ":4001", service);
     } else {
-      window.location.hash = 'settings';
+      window.location.href = '/#settings';
     }
   },
 
