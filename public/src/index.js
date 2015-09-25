@@ -45,6 +45,8 @@ var LagerApp = React.createClass({
     if (window.location.hash) {
       page = window.location.hash.substring(1);
       $('header a.pull-right').attr('href', '/' + page + '/new');
+    } else {
+      window.location.hash = 'servers';
     }
     return {
       logs: [],
@@ -236,7 +238,7 @@ var ServerTableViewCell = React.createClass({
     var status = this.state.status ? "Up" : "Down";
     return (
       <li className="table-view-cell">
-        <a className="navigate-right" href="#server-services" data-transition="slide-in" onClick={this.props.loadServerServiceData.bind(null, server)}>
+        <a className="navigate-right" href="#server-services" onClick={this.props.loadServerServiceData.bind(null, server)}>
           <div style={{float: "left"}}>
             <h4>{server.host}</h4>
             <h5>{server.label}</h5>
@@ -253,8 +255,20 @@ var ServerTableViewCell = React.createClass({
 
 var ServerServicesTableView = React.createClass({
 
+  componentWillMount: function() {
+    $('.bar-nav').append('<a id="left-nav-button" class="icon icon-left-nav pull-left"></a>');
+
+    $('#left-nav-button').on('click', function() {
+      history.back();
+    });
+  },
+
   componentDidMount: function() {
     $('header a.pull-right').attr('href', '/services/new');
+  },
+
+  componentWillUnmount: function() {
+    $('#left-nav-button').remove();
   },
 
   _generateServiceTableViewCells: function() {
