@@ -57,9 +57,9 @@ class App
 
   post '/servers' do
     protected!
-    server_params = params["server"]
-    respond_as_unauthorized unless server_params
-    server = Server.create(host: server_params["host"], label: server_params["label"])
+    # server_params = params["server"]
+    # respond_as_unauthorized unless server_params
+    # server = Server.create(host: server_params["host"], label: server_params["label"])
   end
 
   get '/logs/server/:id' do
@@ -82,17 +82,17 @@ class App
   end
 
   post '/services' do
-    services_params = params["services"]
-    halt(400, "Services Params missing") unless services_params
+    # services_params = params["services"]
+    # halt(400, "Services Params missing") unless services_params
 
-    service = Service.create(name: services_params["name"], service_type: services_params["service_type"])
-    halt(400, service.errors.to_json) unless service.valid?
+    # service = Service.create(name: services_params["name"], service_type: services_params["service_type"])
+    # halt(400, service.errors.to_json) unless service.valid?
 
-    service.servers << services_params["servers"].map do |server_name|
-      Server.find_by(host: server_name)
-    end
-    service.save!
-    service.to_json
+    # service.servers << services_params["servers"].map do |server_name|
+    #   Server.find_by(host: server_name)
+    # end
+    # service.save!
+    # service.to_json
   end
 
   get '/service/:id' do
