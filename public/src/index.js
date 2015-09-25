@@ -289,6 +289,11 @@ var SettingsView = React.createClass({
         <SettingsSelectorView />
         <div>
           <div id="item1mobile" className="control-content active">
+            <div className="content-padded">
+              <h4 style={{"color": "red"}}>This is a demo instance. Changes made will not be persistent.</h4>
+              <h4>Username: lager</h4>
+              <h4>Password: lager</h4>
+            </div>
             <NewAccountView loadData={this.props.loadData} />
           </div>
 
