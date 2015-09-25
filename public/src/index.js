@@ -4,34 +4,54 @@ var LagerApp = React.createClass({
     var username = localStorage.getItem('username');
     var authToken = localStorage.getItem('auth_token');
 
-    $.ajax({
-      headers: {
-        'Authorization': 'Basic ' + btoa(username + ':' + authToken)
-      },
-      url: "/servers",
-      dataType: 'json',
-      cache: true,
-      success: function(data) {
-        this.setState({ servers: data });
-      }.bind(this)
-    });
+    if (!this._loadServersFromSessionStorage()) {
+      $.ajax({
+        headers: {
+          'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+        },
+        url: "/servers",
+        dataType: 'json',
+        cache: true,
+        success: function(data) {
+          sessionStorage.setItem('servers', JSON.stringify(data))
+          this.setState({ servers: data });
+        }.bind(this)
+      });
+    }
+  },
+
+  _loadServersFromSessionStorage: function() {
+    var servers = sessionStorage.getItem('servers');
+    if (!servers) { return false; }
+    this.setState({ servers: JSON.parse(servers) })
+    return true;
   },
 
   _loadServicesData: function() {
     var username = localStorage.getItem('username');
     var authToken = localStorage.getItem('auth_token');
 
-    $.ajax({
-      headers: {
-        'Authorization': 'Basic ' + btoa(username + ':' + authToken)
-      },
-      url: "/services",
-      dataType: 'json',
-      cache: true,
-      success: function(data) {
-        this.setState({ services: data });
-      }.bind(this)
-    });
+    if (!this._loadServicesFromSessionStorage()) {
+      $.ajax({
+        headers: {
+          'Authorization': 'Basic ' + btoa(username + ':' + authToken)
+        },
+        url: "/services",
+        dataType: 'json',
+        cache: true,
+        success: function(data) {
+          sessionStorage.setItem('services', JSON.stringify(data))
+          this.setState({ services: data });
+        }.bind(this)
+      });
+    }
+  },
+
+  _loadServicesFromSessionStorage: function() {
+    var services = sessionStorage.getItem('services');
+    if (!services) { return false; }
+    this.setState({ services: JSON.parse(services) })
+    return true;
   },
 
   loadServerServiceData: function(server) {

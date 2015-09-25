@@ -22,6 +22,17 @@
       var username = localStorage.getItem('username');
       var authToken = localStorage.getItem('auth_token');
 
+      var servers = JSON.parse(sessionStorage.getItem('servers'));
+      servers.push({
+        id: 100 + servers.length,
+        host: host,
+        label: label,
+        services: []
+      })
+      sessionStorage.setItem('servers', JSON.stringify(servers));
+      window.location.href = '/#servers'
+
+      /*
       $.ajax({
         method: "POST",
         headers: {
@@ -37,6 +48,7 @@
       }).done(function(resp) {
         window.location.href = '/#servers';
       });
+      */
     });
 
   </script>

@@ -63,6 +63,7 @@ var formData = {
   }
 };
 
+/*
 $.get("/servers", function(resp) {
   // Populate the server selectors
   resp.forEach(function(server) {
@@ -70,7 +71,12 @@ $.get("/servers", function(resp) {
   });
   prepareServerButtons();
 })
+*/
 
+JSON.parse(sessionStorage.getItem('servers')).forEach(function(server) {
+  $('#serverSelector .next-step').before('<button class="btn btn-block btn-outlined">' + server.host + '</button>');
+});
+prepareServerButtons();
 
 // Turns button into active on touch and stores server selection into form data
 function prepareServerButtons() {
@@ -116,6 +122,40 @@ $('.next-step').on('click', function() {
   });
 });
 
+function addService(service) {
+  var servers = JSON.parse(sessionStorage.getItem('servers'));
+  var services = JSON.parse(sessionStorage.getItem('services'));
+  var selectedHosts = formData.services.servers;
+  // does not check for dupes
+  var newService = {
+    id: services.length + 100,
+    name: service.name,
+    service_type: service.service_type,
+    log_path: service.log_path,
+    servers: servers.filter(function(server) {
+      filtered = selectedHosts.filter(function(h) {
+        return server.host === h;
+      })
+      return filtered.length > 0;
+    })
+  }
+  services.push(newService);
+  sessionStorage.setItem('services', JSON.stringify(services));
+
+  servers = servers.map(function(server) {
+    if (newService.servers.filter(function(s) { return s.id === server.id }).length > 0) {
+        server.services.push({
+        id: newService.id,
+        name: newService.name,
+        service_type: newService.service_type,
+        log_path: newService.log_path
+      });
+    }
+    return server;
+  })
+  sessionStorage.setItem('servers', JSON.stringify(servers));
+}
+
 // Submits the form
 $('#serviceSelector').on('submit', function(e) {
   e.preventDefault();
@@ -128,6 +168,9 @@ $('#serviceSelector').on('submit', function(e) {
   var username = localStorage.getItem('username');
   var authToken = localStorage.getItem('auth_token');
 
+  addService(formData.services);
+  window.location.href = '/#services';
+  /*
   $.ajax({
     method: 'POST',
     headers: {
@@ -138,6 +181,7 @@ $('#serviceSelector').on('submit', function(e) {
   }).done(function(resp) {
     window.location.href = '/#services';
   });
+  */
 });
 
   </script>
