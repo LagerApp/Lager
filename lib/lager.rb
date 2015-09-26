@@ -50,9 +50,8 @@ class App
   end
 
   get '/init' do
-    if !User.count.zero?
-      @success = false
-    else
+    @success = false
+    if User.count.zero?
       user = User.first_or_create(
         username: params[:username] || 'admin',
         password: params[:password] || 'admin'
