@@ -4,7 +4,11 @@
 <div class="content">
   <div id="content">
     <div class="init-message">
-      Initalization Successful. Click <a href="/">here</a> to start using Lager
+      <% if @success %>
+        Initalization Successful. Click <a href="/">here</a> to start using Lager
+      <% else %>
+        A lager user already exists or you have supplied invalid params
+      <% end %>
     </div>
   </div>
 </div>

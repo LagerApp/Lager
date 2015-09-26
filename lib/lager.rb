@@ -50,7 +50,15 @@ class App
   end
 
   get '/init' do
-    User.first_or_create(username: 'admin', password: 'admin')
+    if !User.count.zero?
+      @success = false
+    else
+      user = User.first_or_create(
+        username: params[:username] || 'admin',
+        password: params[:password] || 'admin'
+      )
+      @success = true if user.valid?
+    end
     erb :init
   end
 
